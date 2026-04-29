@@ -4,17 +4,48 @@
  */
 package com.grupo2.sistemadegestionveterinaria.vista;
 
+import com.grupo2.sistemadegestionveterinaria.controlador.ControladorClienteMascota;
+import com.grupo2.sistemadegestionveterinaria.modelo.ModeloCliente;
+import com.grupo2.sistemadegestionveterinaria.modelo.ModeloMascota;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Galo Izquierdo
  */
 public class FrmMascota extends javax.swing.JFrame {
 
+  private ModeloCliente clienteActual = null;
+  private DefaultTableModel modelo;
+
   /**
    * Creates new form FrmMascota
    */
   public FrmMascota() {
+    setSize(750, 500);
+    setLocationRelativeTo(null);
+    setDefaultCloseOperation(EXIT_ON_CLOSE);
+
     initComponents();
+    modelo = new DefaultTableModel(
+            new Object[]{"ID", "Nombre", "Raza", "Especie"}, 0
+    ) {
+      public boolean isCellEditable(int row, int col) {
+        return col != 0; // ID no editable
+      }
+    };
+
+    //configurarValidaciones();
+  }
+
+  private void limpiarTabla() {
+    modelo.setRowCount(0);
   }
 
   /**
@@ -34,15 +65,20 @@ public class FrmMascota extends javax.swing.JFrame {
     txtTelefono = new javax.swing.JTextField();
     txtNombre = new javax.swing.JTextField();
     btnBuscar = new javax.swing.JButton();
+    lbEstado = new javax.swing.JLabel();
     jPanel2 = new javax.swing.JPanel();
     jLabel1 = new javax.swing.JLabel();
     jLabel2 = new javax.swing.JLabel();
     btnAgregar = new javax.swing.JButton();
     btnEliminar = new javax.swing.JButton();
-    cbEspecie = new javax.swing.JComboBox<>();
+    javax.swing.JComboBox<String> cbEspecie = new javax.swing.JComboBox<>();
     jLabel3 = new javax.swing.JLabel();
-    txtMascota = new javax.swing.JTextField();
-    txtRaza = new javax.swing.JTextField();
+    javax.swing.JTextField txtMascota = new javax.swing.JTextField();
+    javax.swing.JTextField txtRaza = new javax.swing.JTextField();
+    jScrollPane1 = new javax.swing.JScrollPane();
+    tabla = new javax.swing.JTable();
+    btnGuardar = new javax.swing.JButton();
+    btnSalir = new javax.swing.JButton();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     setTitle("Registro de Mascotas/Clientes");
@@ -65,6 +101,11 @@ public class FrmMascota extends javax.swing.JFrame {
     txtNombre.setName(""); // NOI18N
 
     btnBuscar.setText("Buscar");
+    btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnBuscarActionPerformed(evt);
+      }
+    });
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
@@ -85,7 +126,11 @@ public class FrmMascota extends javax.swing.JFrame {
             .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
             .addComponent(btnBuscar))
-          .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addGroup(jPanel1Layout.createSequentialGroup()
+            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(72, 72, 72)
+            .addComponent(lbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(0, 0, Short.MAX_VALUE)))
         .addContainerGap())
     );
     jPanel1Layout.setVerticalGroup(
@@ -100,10 +145,15 @@ public class FrmMascota extends javax.swing.JFrame {
           .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
             .addComponent(lbced)
             .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        .addGap(14, 14, 14)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(lbnom))
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGap(14, 14, 14)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(lbnom)))
+          .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGap(18, 18, 18)
+            .addComponent(lbEstado)))
         .addContainerGap(31, Short.MAX_VALUE))
     );
 
@@ -121,30 +171,44 @@ public class FrmMascota extends javax.swing.JFrame {
 
     jLabel3.setText("Especie");
 
+    tabla.setModel(new javax.swing.table.DefaultTableModel(
+      new Object [][] {
+        {null, null, null, null},
+        {null, null, null, null},
+        {null, null, null, null},
+        {null, null, null, null}
+      },
+      new String [] {
+        "Title 1", "Title 2", "Title 3", "Title 4"
+      }
+    ));
+    jScrollPane1.setViewportView(tabla);
+
     javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel2Layout.createSequentialGroup()
-        .addGap(27, 27, 27)
-        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jLabel1)
-          .addComponent(jLabel2))
-        .addGap(27, 27, 27)
-        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-          .addComponent(txtMascota, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
-          .addComponent(txtRaza))
-        .addGap(18, 18, 18)
-        .addComponent(jLabel3)
-        .addGap(18, 18, 18)
-        .addComponent(cbEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(121, Short.MAX_VALUE))
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addComponent(btnAgregar)
-        .addGap(13, 13, 13)
-        .addComponent(btnEliminar)
-        .addContainerGap())
+        .addGap(27, 27, 27)
+        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+          .addComponent(jScrollPane1)
+          .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jLabel1)
+              .addComponent(jLabel2))
+            .addGap(27, 27, 27)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+              .addComponent(txtMascota, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+              .addComponent(txtRaza))
+            .addGap(18, 18, 18)
+            .addComponent(jLabel3)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(cbEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(btnEliminar)
+              .addComponent(btnAgregar))))
+        .addGap(27, 27, 27))
     );
     jPanel2Layout.setVerticalGroup(
       jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -153,30 +217,41 @@ public class FrmMascota extends javax.swing.JFrame {
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(jLabel1)
           .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-            .addComponent(cbEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(jLabel3)
-            .addComponent(txtMascota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addComponent(txtMascota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(cbEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btnAgregar)))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel2)
-          .addComponent(txtRaza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(btnAgregar)
+          .addComponent(txtRaza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(btnEliminar))
-        .addContainerGap(17, Short.MAX_VALUE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(57, Short.MAX_VALUE))
     );
+
+    btnGuardar.setText("Guardar");
+
+    btnSalir.setText("Salir");
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-        .addContainerGap(15, Short.MAX_VALUE)
+      .addGroup(layout.createSequentialGroup()
+        .addContainerGap(9, Short.MAX_VALUE)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addContainerGap())
+          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+              .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+              .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addContainerGap())
+          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addComponent(btnGuardar)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(btnSalir)
+            .addGap(12, 12, 12))))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -185,11 +260,54 @@ public class FrmMascota extends javax.swing.JFrame {
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(18, 18, 18)
         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(79, Short.MAX_VALUE))
+        .addGap(46, 46, 46)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(btnSalir)
+          .addComponent(btnGuardar))
+        .addGap(0, 14, Short.MAX_VALUE))
     );
 
     pack();
   }// </editor-fold>//GEN-END:initComponents
+
+  private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+    try {
+      ControladorClienteMascota ctrl = new ControladorClienteMascota();
+
+      List<ModeloMascota> lista = new ArrayList<>();
+      System.out.println(txtCedula.getText());
+      clienteActual = ctrl.buscar(txtCedula.getText(), lista);
+
+      modelo.setRowCount(0);
+
+      if (clienteActual != null) {
+
+        txtNombre.setText(clienteActual.getNombres());
+        txtTelefono.setText(clienteActual.getTelefono());
+
+        for (ModeloMascota m : lista) {
+          modelo.addRow(new Object[]{
+            m.getId(),
+            m.getNombre(),
+            m.getRaza(),
+            m.getEspecie()
+          });
+        }
+
+        lbEstado.setText("Cliente cargado");
+
+      } else {
+        clienteActual = new ModeloCliente();
+        clienteActual.setCedula(txtCedula.getText());
+
+        limpiarTabla();
+        lbEstado.setText("Nuevo cliente");
+      }
+
+    } catch (Exception e) {
+      JOptionPane.showMessageDialog(this, e.getMessage());
+    }
+  }//GEN-LAST:event_btnBuscarActionPerformed
 
   /**
    * @param args the command line arguments
@@ -230,19 +348,21 @@ public class FrmMascota extends javax.swing.JFrame {
   private javax.swing.JButton btnAgregar;
   private javax.swing.JButton btnBuscar;
   private javax.swing.JButton btnEliminar;
-  private javax.swing.JComboBox<String> cbEspecie;
+  private javax.swing.JButton btnGuardar;
+  private javax.swing.JButton btnSalir;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
+  private javax.swing.JScrollPane jScrollPane1;
+  private javax.swing.JLabel lbEstado;
   private javax.swing.JLabel lbced;
   private javax.swing.JLabel lbnom;
   private javax.swing.JLabel lbtel;
+  private javax.swing.JTable tabla;
   private javax.swing.JTextField txtCedula;
-  private javax.swing.JTextField txtMascota;
   private javax.swing.JTextField txtNombre;
-  private javax.swing.JTextField txtRaza;
   private javax.swing.JTextField txtTelefono;
   // End of variables declaration//GEN-END:variables
 }

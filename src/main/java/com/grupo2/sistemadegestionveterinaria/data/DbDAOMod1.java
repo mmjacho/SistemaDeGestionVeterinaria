@@ -22,7 +22,7 @@ public class DbDAOMod1 {
   // =========================
   public ModeloCliente buscarCliente(String cedula) throws Exception {
 
-    String sql = "SELECT * FROM g2_vet_cliente WHERE cedula=?";
+    String sql = "SELECT * FROM g2_vet_clientes WHERE cedula=?";
 
     try (Connection con = CnnDB.getConeccion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -32,7 +32,7 @@ public class DbDAOMod1 {
 
         if (rs.next()) {
           ModeloCliente c = new ModeloCliente();
-          c.setId(rs.getInt("id"));
+          c.setId(rs.getInt("id_cliente"));
           c.setCedula(rs.getString("cedula"));
           c.setNombres(rs.getString("nombres"));
           c.setTelefono(rs.getString("telefono"));
@@ -51,7 +51,7 @@ public class DbDAOMod1 {
 
     List<ModeloMascota> lista = new ArrayList<>();
 
-    String sql = "SELECT * FROM g2_vet_mascota WHERE cliente_id=?";
+    String sql = "SELECT * FROM g2_vet_mascotas WHERE id_cliente=? and estado=0";
 
     try (Connection con = CnnDB.getConeccion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -61,7 +61,7 @@ public class DbDAOMod1 {
 
         while (rs.next()) {
           ModeloMascota m = new ModeloMascota();
-          m.setId(rs.getInt("id"));
+          m.setId(rs.getInt("id_mascota"));
           m.setNombre(rs.getString("nombre"));
           m.setRaza(rs.getString("raza"));
           m.setEspecie(rs.getString("especie"));
@@ -81,7 +81,7 @@ public class DbDAOMod1 {
   // =========================
   public int insertarCliente(ModeloCliente c, Connection con) throws Exception {
 
-    String sql = "INSERT INTO g2_vet_cliente (cedula,nombres,telefono) VALUES (?,?,?)";
+    String sql = "INSERT INTO g2_vet_clientes (cedula,nombres,telefono) VALUES (?,?,?)";
 
     try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -106,7 +106,7 @@ public class DbDAOMod1 {
   // =========================
   public void actualizarCliente(ModeloCliente c, Connection con) throws Exception {
 
-    String sql = "UPDATE g2_vet_cliente SET nombres=?, telefono=? WHERE id=?";
+    String sql = "UPDATE g2_vet_clientes SET nombres=?, telefono=? WHERE id_cliente=?";
 
     try (PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -123,8 +123,8 @@ public class DbDAOMod1 {
   // =========================
   public void guardarMascotas(List<ModeloMascota> lista, int clienteId, Connection con) throws Exception {
 
-    String sqlInsert = "INSERT INTO g2_vet_mascota (nombre,raza,especie,cliente_id) VALUES (?,?,?,?)";
-    String sqlUpdate = "UPDATE g2_vet_mascota SET nombre=?, raza=?, especie=? WHERE id=?";
+    String sqlInsert = "INSERT INTO g2_vet_mascotas (nombre,raza,especie,id_cliente) VALUES (?,?,?,?)";
+    String sqlUpdate = "UPDATE g2_vet_mascotas SET nombre=?, raza=?, especie=? WHERE id_mascota=?";
 
     for (ModeloMascota m : lista) {
 
@@ -160,7 +160,7 @@ public class DbDAOMod1 {
   // =========================
   public void eliminarMascota(int id, Connection con) throws Exception {
 
-    String sql = "UPDATE g2_vet_mascota SET estado = 9 WHERE id=?";
+    String sql = "UPDATE g2_vet_mascotas SET estado = 9 WHERE id_mascota=?";
 
     try (PreparedStatement ps = con.prepareStatement(sql)) {
       ps.setInt(1, id);
@@ -175,7 +175,7 @@ public class DbDAOMod1 {
 
     List<ModeloMascota> lista = new ArrayList<>();
 
-    String sql = "SELECT * FROM g2_vet_mascota WHERE nombre LIKE ?";
+    String sql = "SELECT * FROM g2_vet_mascotas WHERE nombre LIKE ?";
 
     try (Connection con = CnnDB.getConeccion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -185,11 +185,11 @@ public class DbDAOMod1 {
 
         while (rs.next()) {
           ModeloMascota m = new ModeloMascota();
-          m.setId(rs.getInt("id"));
+          m.setId(rs.getInt("id_masctoa"));
           m.setNombre(rs.getString("nombre"));
           m.setRaza(rs.getString("raza"));
           m.setEspecie(rs.getString("especie"));
-          m.setClienteId(rs.getInt("cliente_id"));
+          m.setClienteId(rs.getInt("id_cliente"));
 
           lista.add(m);
         }
