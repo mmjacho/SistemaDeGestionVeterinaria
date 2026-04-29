@@ -24,7 +24,7 @@ public class DbDAOMod1 {
 
     String sql = "SELECT * FROM g2_vet_cliente WHERE cedula=?";
 
-    try (Connection con = CnnDB.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+    try (Connection con = CnnDB.getConeccion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
       ps.setString(1, cedula);
 
@@ -53,7 +53,7 @@ public class DbDAOMod1 {
 
     String sql = "SELECT * FROM g2_vet_mascota WHERE cliente_id=?";
 
-    try (Connection con = CnnDB.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+    try (Connection con = CnnDB.getConeccion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
       ps.setInt(1, clienteId);
 
@@ -177,7 +177,7 @@ public class DbDAOMod1 {
 
     String sql = "SELECT * FROM g2_vet_mascota WHERE nombre LIKE ?";
 
-    try (Connection con = CnnDB.getConexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+    try (Connection con = CnnDB.getConeccion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
       ps.setString(1, "%" + nombre + "%");
 

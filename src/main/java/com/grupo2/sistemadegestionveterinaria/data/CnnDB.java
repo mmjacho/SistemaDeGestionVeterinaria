@@ -26,7 +26,7 @@ public class CnnDB {
   // Construcción de la URL de conexión para MySQL
   private static final String URL = "jdbc:mysql://" + HOST + ":" + PUERTO + "/" + BASE_DATOS;
 
-  public static Connection getConexion() throws Exception {
+  public static Connection getConeccion() throws Exception {
     Connection con = null;
     try {
       // Se establece la conexión con la base de datos

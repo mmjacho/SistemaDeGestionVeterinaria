@@ -4,7 +4,7 @@
  */
 package com.grupo2.sistemadegestionveterinaria;
 
-import com.edu.ug.veterinaria.view.FrmMascota;
+import com.grupo2.sistemadegestionveterinaria.vista.FrmMascota;
 
 public class SistemaDeGestionVeterinaria {
 

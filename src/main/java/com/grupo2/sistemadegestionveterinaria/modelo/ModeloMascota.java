@@ -11,6 +11,7 @@ public class ModeloMascota {
   private String raza;
   private String especie;
   private int clienteId;
+  private int estado;
 
   // getters y setters
   public Integer getId() {
@@ -52,4 +53,13 @@ public class ModeloMascota {
   public void setClienteId(int clienteId) {
     this.clienteId = clienteId;
   }
+
+  public Integer getEstado() {
+    return estado;
+  }
+
+  public void setEstado(Integer estado) {
+    this.estado = estado;
+  }
+
 }
