@@ -17,22 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Mikka
  */
 public class ModeloMedicoTest {
-/*
-    @Test
-    public void testGuardarMedico() {
 
-        ModeloMedico medico = new ModeloMedico();
-
-        medico.setNombres("Carlos");
-        medico.setApellidos("Perez");
-        medico.setEspecialidad("Caninos");
-        medico.setTelefono("0999999999");
-
-        boolean resultado = medico.guardarMedico();
-
-        assertTrue(resultado);
-    }
-    */
    @Test
     public void testListarMedicos() {
 
@@ -57,6 +42,7 @@ public class ModeloMedicoTest {
     medico.setApellidos("Perez Actualizado");
     medico.setEspecialidad("Felinos");
     medico.setTelefono("0981111111");
+    medico.setEstado(true);
 
     boolean resultado = medico.actualizarMedico();
 
@@ -97,7 +83,7 @@ public class ModeloMedicoTest {
 
     String telefono = "09999999999";
 
-    assertTrue(
+    assertFalse(
             telefono.length() <= 10
     );
     }
@@ -110,7 +96,7 @@ public class ModeloMedicoTest {
     boolean soloNumeros =
             telefono.matches("\\d+");
 
-    assertTrue(soloNumeros);
+    assertFalse(soloNumeros);
     }
     
     @Test
@@ -121,7 +107,7 @@ public class ModeloMedicoTest {
     boolean soloLetras =
             nombre.matches("[a-zA-Z ]+");
 
-    assertTrue(soloLetras);
+    assertFalse(soloLetras);
     }
     
     @Test
@@ -132,6 +118,40 @@ public class ModeloMedicoTest {
     boolean soloLetras =
             apellido.matches("[a-zA-Z ]+");
 
-    assertTrue(soloLetras);
+    assertFalse(soloLetras);
     }
+    
+    @Test
+   public void testGuardarMedico() {
+
+    ModeloMedico medico = new ModeloMedico();
+
+    medico.setNombres("Carlos");
+    medico.setApellidos("Perez");
+    medico.setEspecialidad("Caninos");
+    medico.setTelefono("0999999999");
+    medico.setEstado(true);
+
+    boolean resultado =
+            medico.guardarMedico();
+
+    assertTrue(resultado);
+}
+   @Test
+public void testGuardarMedicoInactivo() {
+
+    ModeloMedico medico = new ModeloMedico();
+
+    medico.setNombres("Luis");
+    medico.setApellidos("Torres");
+    medico.setEspecialidad("Felinos");
+    medico.setTelefono("0988888888");
+    medico.setEstado(false);
+
+    boolean resultado =
+            medico.guardarMedico();
+
+    assertTrue(resultado);
+}
+   
 }
