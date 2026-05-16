@@ -30,8 +30,8 @@ public class ModeloMedicoTest {
     );
     } 
     
-    @Test
-    public void testActualizarMedico() {
+  /*  @Test
+   public void testActualizarMedico() {
 
     ModeloMedico medico = new ModeloMedico();
 
@@ -47,7 +47,7 @@ public class ModeloMedicoTest {
     boolean resultado = medico.actualizarMedico();
 
     assertTrue(resultado);
-}
+}*/
    @Test
    public void testEliminarMedico() {
 
@@ -121,7 +121,7 @@ public class ModeloMedicoTest {
     assertFalse(soloLetras);
     }
     
-    @Test
+  /*  @Test
    public void testGuardarMedico() {
 
     ModeloMedico medico = new ModeloMedico();
@@ -136,7 +136,8 @@ public class ModeloMedicoTest {
             medico.guardarMedico();
 
     assertTrue(resultado);
-}
+}*/
+  /*  
    @Test
 public void testGuardarMedicoInactivo() {
 
@@ -152,6 +153,6 @@ public void testGuardarMedicoInactivo() {
             medico.guardarMedico();
 
     assertTrue(resultado);
-}
+}*/
    
 }

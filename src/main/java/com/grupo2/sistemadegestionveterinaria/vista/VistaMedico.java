@@ -9,6 +9,7 @@ import com.grupo2.sistemadegestionveterinaria.controlador.ControladorMedico;
 import com.grupo2.sistemadegestionveterinaria.modelo.ModeloMedico;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import com.grupo2.sistemadegestionveterinaria.vista.VistaMenuPrincipal;
 
 public class VistaMedico extends JFrame {
 
@@ -25,6 +26,7 @@ public class VistaMedico extends JFrame {
     public JButton btnActualizar;
     public JButton btnEliminar;
     public JButton btnLimpiar;
+    public JButton btnRegresar;
 
     // TABLA
     public JTable tablaMedicos;
@@ -39,7 +41,7 @@ public class VistaMedico extends JFrame {
         setTitle("Módulo - Médicos Veterinarios");
         setSize(1200, 750);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         //----------------------------------------
         // PANEL PRINCIPAL
@@ -60,6 +62,35 @@ public class VistaMedico extends JFrame {
         lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 
         panelHeader.add(lblTitulo, BorderLayout.CENTER);
+        
+        //----------------------------------------
+// BOTÓN REGRESAR SUPERIOR
+//----------------------------------------
+JPanel panelSuperiorDerecha = new JPanel(
+        new FlowLayout(FlowLayout.RIGHT)
+);
+
+panelSuperiorDerecha.setBackground(Color.WHITE);
+
+btnRegresar = crearBoton(
+        "← Regresar",
+        new Color(44, 62, 80)
+);
+
+btnRegresar.setPreferredSize(
+        new Dimension(140, 40)
+);
+
+panelSuperiorDerecha.add(btnRegresar);
+btnRegresar.addActionListener(e -> {
+
+    dispose();
+});
+
+panelHeader.add(
+        panelSuperiorDerecha,
+        BorderLayout.EAST
+);
 
         //----------------------------------------
         // PANEL CONTENIDO
@@ -264,7 +295,7 @@ panelFormulario.add(chkEstado);
         // PANEL BOTONES
         //----------------------------------------
         JPanel panelBotones = new JPanel(
-                new FlowLayout(FlowLayout.CENTER, 20, 15)
+        new FlowLayout(FlowLayout.CENTER, 20, 15)
         );
 
         panelBotones.setBackground(new Color(245, 247, 250));
@@ -274,6 +305,7 @@ panelFormulario.add(chkEstado);
         btnActualizar = crearBoton("Actualizar", new Color(255, 153, 0));
         btnEliminar = crearBoton("Eliminar", new Color(220, 53, 69));
         btnLimpiar = crearBoton("Limpiar", new Color(108, 117, 125));
+        btnRegresar = crearBoton("Regresar", new Color(52, 73, 94));
 
         
         
@@ -282,6 +314,12 @@ panelFormulario.add(chkEstado);
         panelBotones.add(btnActualizar);
         panelBotones.add(btnEliminar);
         panelBotones.add(btnLimpiar);
+        
+        
+       btnRegresar.addActionListener(e -> {
+
+        dispose();
+        });
         
 
         //----------------------------------------
@@ -397,7 +435,7 @@ panelFormulario.add(chkEstado);
         boton.setForeground(Color.WHITE);
         boton.setBackground(color);
 
-        boton.setPreferredSize(new Dimension(190, 45));
+        boton.setPreferredSize(new Dimension(160, 45));
 
         boton.setBorder(new EmptyBorder(10, 15, 10, 15));
 

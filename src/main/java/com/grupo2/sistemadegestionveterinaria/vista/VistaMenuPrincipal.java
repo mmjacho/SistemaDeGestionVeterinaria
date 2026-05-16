@@ -6,6 +6,9 @@ package com.grupo2.sistemadegestionveterinaria.vista;
 
 import javax.swing.*;
 import java.awt.*;
+import com.grupo2.sistemadegestionveterinaria.modelo.ModeloMedico;
+import com.grupo2.sistemadegestionveterinaria.controlador.ControladorMedico;
+import com.grupo2.sistemadegestionveterinaria.controlador.ControladorCita;
 
 public class VistaMenuPrincipal extends JFrame {
 
@@ -42,8 +45,44 @@ public class VistaMenuPrincipal extends JFrame {
 
         // Acciones de los botones para abrir las otras ventanas
         btnModuloMascota.addActionListener(e -> new VistaClienteMascota().setVisible(true));
-        btnModuloMedico.addActionListener(e -> new VistaMedico().setVisible(true));
-        btnModuloCita.addActionListener(e -> new VistaCita().setVisible(true));
+        btnModuloMedico.addActionListener(e -> {
+
+            setVisible(false);
+
+             VistaMedico vista = new VistaMedico();
+
+            ModeloMedico modelo = new ModeloMedico();
+
+            ControladorMedico controlador =
+            new ControladorMedico(
+                    modelo,
+                    vista
+            );
+
+            vista.addWindowListener(
+            new java.awt.event.WindowAdapter() {
+
+              @Override
+             public void windowClosed(
+                java.awt.event.WindowEvent e
+            ) {
+
+            setVisible(true);
+             }
+            });
+
+            vista.setVisible(true);
+            });
+        
+       btnModuloCita.addActionListener(e -> {
+
+            VistaCita vista = new VistaCita();
+
+            ControladorCita controlador =
+            new ControladorCita(vista);
+
+            vista.setVisible(true);
+            });
         btnModuloAtencion.addActionListener(e -> new VistaAtencion().setVisible(true));
         btnModuloFactura.addActionListener(e -> new VistaFacturacion().setVisible(true));
 
