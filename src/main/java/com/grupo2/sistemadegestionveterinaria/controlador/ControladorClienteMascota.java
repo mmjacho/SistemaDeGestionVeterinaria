@@ -37,7 +37,7 @@ public class ControladorClienteMascota {
       con.setAutoCommit(false);
 
       // INSERT o UPDATE cliente
-      if (c.getId() == 0) {
+      if (c.getId() == null || c.getId() == 0) {
         int id = dao.insertarCliente(c, con);
         c.setId(id);
       } else {

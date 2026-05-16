@@ -185,7 +185,7 @@ public class DbDAOMod1 {
 
         while (rs.next()) {
           ModeloMascota m = new ModeloMascota();
-          m.setId(rs.getInt("id_masctoa"));
+          m.setId(rs.getInt("id_mascota"));
           m.setNombre(rs.getString("nombre"));
           m.setRaza(rs.getString("raza"));
           m.setEspecie(rs.getString("especie"));
