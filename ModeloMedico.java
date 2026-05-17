@@ -19,7 +19,7 @@ public class ModeloMedico {
     private String apellidos;
     private String especialidad;
     private String telefono;
-    private boolean estado;
+   /* private String estado;*/
 
     // CONEXIÓN
     Connection con;
@@ -75,13 +75,13 @@ public class ModeloMedico {
         this.telefono = telefono;
     }
 
-   public boolean isEstado() {
+   /* public String getEstado() {
         return estado;
     }
 
-   public void setEstado(boolean estado) {
+   public void setEstado(String estado) {
         this.estado = estado;
-    }
+}*/
 
 
     //-----------------------------------------
@@ -90,8 +90,8 @@ public class ModeloMedico {
     public boolean guardarMedico() {
 
         String sql = "INSERT INTO g2_vet_medicos "
-        + "(nombres, apellidos, especialidad, telefono, estado) "
-        + "VALUES (?, ?, ?, ?, ?)";
+        + "(nombres, apellidos, especialidad, telefono) "
+        + "VALUES (?, ?, ?, ?)";
 
         try {
 
@@ -104,7 +104,7 @@ public class ModeloMedico {
     ps.setString(2, apellidos);
     ps.setString(3, especialidad);
     ps.setString(4, telefono);
-    ps.setBoolean(5, estado);
+    /*ps.setString(5, estado);*/
 
     ps.executeUpdate();
 
@@ -161,9 +161,9 @@ public class ModeloMedico {
                         rs.getString("telefono")
                 );
 
-                m.setEstado(
-                        rs.getBoolean("estado")
-                );
+              /*  m.setEstado(
+                        rs.getString("estado")
+                );*/
 
                 lista.add(m);
             }
@@ -188,8 +188,7 @@ public boolean actualizarMedico() {
             + "SET nombres=?, "
             + "apellidos=?, "
             + "especialidad=?, "
-            + "telefono=?, "
-            + "estado=? "
+            + "telefono=? "
             + "WHERE id_medico=?";
 
     try {
@@ -203,9 +202,8 @@ public boolean actualizarMedico() {
         ps.setString(2, apellidos);
         ps.setString(3, especialidad);
         ps.setString(4, telefono);
-        ps.setBoolean(5, estado);
 
-        ps.setInt(6, idMedico);
+        ps.setInt(5, idMedico);
 
         ps.executeUpdate();
 
@@ -224,8 +222,7 @@ public boolean actualizarMedico() {
 public boolean eliminarMedico() {
 
     String sql =
-            "UPDATE g2_vet_medicos "
-            + "SET estado=false "
+            "DELETE FROM g2_vet_medicos "
             + "WHERE id_medico=?";
 
     try {
@@ -306,10 +303,6 @@ public ArrayList<ModeloMedico> buscarMedico(
 
             m.setTelefono(
                     rs.getString("telefono")
-            );
-            
-            m.setEstado(
-            rs.getBoolean("estado")
             );
 
             lista.add(m);

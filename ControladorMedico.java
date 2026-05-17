@@ -150,20 +150,6 @@ if (e.getSource() == vista.btnBuscar) {
         modelo.setTelefono(
                 vista.txtTelefono.getText()
         );
-        
-        modelo.setEstado(
-        vista.chkEstado.isSelected()
-        );
-        
-        if (vista.txtTelefono.getText().length() != 10) {
-
-        JOptionPane.showMessageDialog(
-            null,
-            "El teléfono debe tener 10 dígitos"
-            );
-
-            return;
-        }
 
         boolean resultado =
                 modelo.guardarMedico();
@@ -198,8 +184,7 @@ if (e.getSource() == vista.btnBuscar) {
                 "Nombres",
                 "Apellidos",
                 "Especialidad",
-                "Teléfono",
-                "Estado"
+                "Teléfono"
         };
 
         DefaultTableModel tabla =
@@ -219,8 +204,7 @@ if (e.getSource() == vista.btnBuscar) {
                     m.getNombres(),
                     m.getApellidos(),
                     m.getEspecialidad(),
-                    m.getTelefono(),
-                    m.isEstado() ? "Activo" : "Inactivo"
+                    m.getTelefono()
             };
 
             tabla.addRow(fila);
@@ -238,8 +222,6 @@ if (e.getSource() == vista.btnBuscar) {
         vista.txtApellidos.setText("");
         vista.txtEspecialidad.setText("");
         vista.txtTelefono.setText("");
-        
-        vista.chkEstado.setSelected(true);
     }
 
     //-----------------------------------------
@@ -282,15 +264,6 @@ if (e.getSource() == vista.btnBuscar) {
                             .getValueAt(fila, 4)
                             .toString()
             );
-            
-            String estado =
-            vista.tablaMedicos
-                .getValueAt(fila, 5)
-                .toString();
-
-            vista.chkEstado.setSelected(
-            estado.equals("Activo")
-            );
         }
     }
     //-----------------------------------------
@@ -317,23 +290,7 @@ public void actualizarMedico() {
     modelo.setTelefono(
             vista.txtTelefono.getText()
     );
-    
-    modelo.setEstado(
-        vista.chkEstado.isSelected()
-    );
 
-    if (vista.txtTelefono.getText().length() != 10) {
-
-    JOptionPane.showMessageDialog(
-            null,
-            "El teléfono debe tener 10 dígitos"
-           );
-
-        return;
-    }
-    
-    
-    
     boolean resultado =
             modelo.actualizarMedico();
 
@@ -435,8 +392,7 @@ public void buscarMedico() {
             "Nombres",
             "Apellidos",
             "Especialidad",
-            "Teléfono",
-            "Estado"
+            "Teléfono"
     };
 
     //-------------------------------------
@@ -475,8 +431,7 @@ if (lista.isEmpty()) {
                 m.getNombres(),
                 m.getApellidos(),
                 m.getEspecialidad(),
-                m.getTelefono(),
-                m.isEstado() ? "Activo" : "Inactivo"
+                m.getTelefono()
         };
 
         tabla.addRow(fila);
