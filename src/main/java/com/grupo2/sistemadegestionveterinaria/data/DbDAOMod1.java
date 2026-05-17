@@ -198,4 +198,36 @@ public class DbDAOMod1 {
 
     return lista;
   }
+   // =========================
+ // 📋 LISTAR MÉDICOS ACTIVOS
+ // =========================
+ public List<String> listarMedicosActivos() throws Exception {
+
+     List<String> lista = new ArrayList<>();
+
+     String sql = """
+         SELECT nombres, apellidos
+         FROM g2_vet_medicos
+         WHERE estado = 1
+     """;
+
+     try (
+         Connection con = CnnDB.getConeccion();
+         PreparedStatement ps = con.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()
+     ) {
+
+         while (rs.next()) {
+
+             String medico =
+                     rs.getString("nombres")
+                     + " "
+                     + rs.getString("apellidos");
+
+             lista.add(medico);
+         }
+     }
+
+     return lista;
+ }
 }
