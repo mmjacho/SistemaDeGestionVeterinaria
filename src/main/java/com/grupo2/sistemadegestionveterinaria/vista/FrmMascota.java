@@ -30,9 +30,10 @@ public class FrmMascota extends javax.swing.JFrame {
   public FrmMascota() {
     setSize(750, 500);
     setLocationRelativeTo(null);
-    setDefaultCloseOperation(EXIT_ON_CLOSE);
 
     initComponents();
+    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
     modelo = new DefaultTableModel(
             new Object[]{"ID", "Nombre", "Raza", "Especie"}, 0
     ) {
@@ -416,7 +417,7 @@ public class FrmMascota extends javax.swing.JFrame {
   }//GEN-LAST:event_btnGuardarActionPerformed
 
   private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-    System.exit(0);
+    dispose();
   }//GEN-LAST:event_btnSalirActionPerformed
 
   /**

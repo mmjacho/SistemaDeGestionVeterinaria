@@ -109,8 +109,41 @@ public class VistaMenuPrincipal extends JFrame {
       vista.setVisible(true);
     });
 
-    btnModuloAtencion.addActionListener(e -> new VistaAtencion().setVisible(true));
-    //btnModuloFactura.addActionListener(e -> new VistaFacturacion().setVisible(true));
+    btnModuloAtencion.addActionListener(e -> {
+
+      setVisible(false);
+
+      VistaAtencion vista = new VistaAtencion();
+
+      vista.addWindowListener(new java.awt.event.WindowAdapter() {
+
+        @Override
+        public void windowClosing(java.awt.event.WindowEvent e) {
+
+          setVisible(true);
+        }
+      });
+
+      vista.setVisible(true);
+    });
+
+    btnModuloFactura.addActionListener(e -> {
+
+      setVisible(false);
+
+      VentanaFacturacion vista = new VentanaFacturacion();
+
+      vista.addWindowListener(new java.awt.event.WindowAdapter() {
+
+        @Override
+        public void windowClosing(java.awt.event.WindowEvent e) {
+
+          setVisible(true);
+        }
+      });
+
+      vista.setVisible(true);
+    });
 
     panelPrincipal.add(panelBotones, BorderLayout.CENTER);
     add(panelPrincipal);
