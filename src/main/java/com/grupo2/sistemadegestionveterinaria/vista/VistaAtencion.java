@@ -4,6 +4,8 @@
  */
 package com.grupo2.sistemadegestionveterinaria.vista;
 
+import com.grupo2.sistemadegestionveterinaria.controlador.ControladorAtencion;
+import com.grupo2.sistemadegestionveterinaria.modelo.ModeloAtencion;
 import javax.swing.*;
 import java.awt.*;
 
@@ -48,7 +50,8 @@ public class VistaAtencion extends JFrame {
         panelBotones.add(btnRegistrarAtencion); panelBotones.add(btnActualizar);
 
         panelPrincipal.add(panelSuperiorAgrupado, BorderLayout.NORTH);
-        panelPrincipal.add(new JScrollPane(tablaHistorial = new JTable(new Object[][]{}, new String[]{"Fecha", "Diagnóstico", "Temp", "Peso"})), BorderLayout.CENTER);
+        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel(new Object[][]{}, new String[]{"Fecha", "Diagnóstico", "Temp", "Peso"});
+        panelPrincipal.add(new JScrollPane(tablaHistorial = new JTable(modelo)), BorderLayout.CENTER);
         panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
 
         add(panelPrincipal);
@@ -56,7 +59,15 @@ public class VistaAtencion extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new VistaAtencion().setVisible(true);
+            // 1. Nacen la Vista y el Modelo
+            VistaAtencion vista = new VistaAtencion();
+            ModeloAtencion modelo = new ModeloAtencion();
+            
+            // 2. Nace el Controlador y "conecta" los botones
+            ControladorAtencion controlador = new ControladorAtencion(vista, modelo);
+            
+            // 3. Mostramos la pantalla
+            vista.setVisible(true);
         });
     }
 }

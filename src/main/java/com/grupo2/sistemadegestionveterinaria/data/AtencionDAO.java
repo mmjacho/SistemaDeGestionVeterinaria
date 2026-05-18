@@ -65,7 +65,7 @@ public class AtencionDAO {
         List<ModeloAtencion> historial = new ArrayList<>();
         String sql = "SELECT a.* FROM g2_vet_atenciones a " +
                      "JOIN g2_vet_citas c ON a.id_cita = c.id_cita " +
-                     "WHERE c.id_mascota = ?";
+                     "WHERE c.mascota_id = ?";
                      
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -116,12 +116,14 @@ public class AtencionDAO {
     
     // Método puente para la vista: Obtiene la mascota a partir de la cita
     public int obtenerIdMascotaPorCita(int idCita) {
-        String sql = "SELECT id_mascota FROM g2_vet_citas WHERE id_cita = ?";
+        // CAMBIO: id_mascota -> mascota_id
+        String sql = "SELECT mascota_id FROM g2_vet_citas WHERE id_cita = ?";
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, idCita);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getInt("id_mascota");
+                // CAMBIO: id_mascota -> mascota_id
+                if (rs.next()) return rs.getInt("mascota_id");
             }
         } catch (Exception e) {
             System.err.println("Error al buscar mascota: " + e.getMessage());
