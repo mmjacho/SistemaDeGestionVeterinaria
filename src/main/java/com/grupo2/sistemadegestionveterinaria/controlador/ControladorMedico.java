@@ -211,6 +211,47 @@ if (e.getSource() == vista.btnBuscar) {
         ArrayList<ModeloMedico> lista =
                 modelo.listarMedicos();
 
+    // =========================
+// ORDENAMIENTO BURBUJA
+// POR APELLIDOS
+// =========================
+for (int i = 0; i < lista.size() - 1; i++) {
+
+    for (int j = 0; j < lista.size() - i - 1; j++) {
+
+        String apellido1 =
+                lista.get(j)
+                     .getApellidos();
+
+        String apellido2 =
+                lista.get(j + 1)
+                     .getApellidos();
+
+        //---------------------------------
+        // COMPARAR ALFABÉTICAMENTE
+        //---------------------------------
+        if (apellido1.compareToIgnoreCase(apellido2) > 0) {
+
+            //---------------------------------
+            // INTERCAMBIO
+            //---------------------------------
+            ModeloMedico temporal =
+                    lista.get(j);
+
+            lista.set(
+                    j,
+                    lista.get(j + 1)
+            );
+
+            lista.set(
+                    j + 1,
+                    temporal
+            );
+        }
+    }
+}    
+          
+        
         for (ModeloMedico m : lista) {
 
             Object fila[] = {
