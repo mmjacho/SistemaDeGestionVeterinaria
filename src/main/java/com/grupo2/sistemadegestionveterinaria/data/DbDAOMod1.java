@@ -209,6 +209,7 @@ public class DbDAOMod1 {
          SELECT nombres, apellidos
          FROM g2_vet_medicos
          WHERE estado = 1
+         ORDER BY apellidos ASC
      """;
 
      try (
