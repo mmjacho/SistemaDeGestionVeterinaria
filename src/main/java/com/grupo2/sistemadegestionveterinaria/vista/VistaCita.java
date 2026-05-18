@@ -4,6 +4,7 @@
  */
 package com.grupo2.sistemadegestionveterinaria.vista;
 
+import com.grupo2.sistemadegestionveterinaria.controlador.ControladorCita;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -64,14 +65,13 @@ public class VistaCita extends JFrame {
   }
 
   public static void main(String[] args) {
-    SwingUtilities.invokeLater(() -> {
-      new VistaCita().setVisible(true);
+    SwingUtilities.invokeLater(new Runnable() {
+      @Override
+      public void run() {
+        VistaCita vista = new VistaCita();
+        ControladorCita controladorCita = new com.grupo2.sistemadegestionveterinaria.controlador.ControladorCita(vista);
+        vista.setVisible(true);
+      }
     });
-    //SwingUtilities.invokeLater(() -> {
-
-    //  VistaCita vista = new VistaCita();
-    //   new com.grupo2.sistemadegestionveterinaria.controlador.ControladorCita(vista);
-    //   vista.setVisible(true);
-    // });
   }
 }
