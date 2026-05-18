@@ -65,13 +65,9 @@ public class VistaCita extends JFrame {
 
   public static void main(String[] args) {
     SwingUtilities.invokeLater(() -> {
-      new VistaCita().setVisible(true);
+      VistaCita vista = new VistaCita();
+      new com.grupo2.sistemadegestionveterinaria.controlador.ControladorCita(vista);
+      vista.setVisible(true);
     });
-    //SwingUtilities.invokeLater(() -> {
-
-    //  VistaCita vista = new VistaCita();
-    //   new com.grupo2.sistemadegestionveterinaria.controlador.ControladorCita(vista);
-    //   vista.setVisible(true);
-    // });
   }
 }

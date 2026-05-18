@@ -38,50 +38,36 @@ public class ControladorCita {
         try {
             ModeloMedico medicoModelo = new ModeloMedico();
             ArrayList<ModeloMedico> medicos = medicoModelo.listarMedicos();
+            System.out.println("Cantidad de médicos encontrados: " + medicos.size());
             vista.cbxMedico.removeAllItems();
             vista.cbxMedico.addItem("(Seleccione un médico)");
             for (ModeloMedico medico : medicos) {
-                vista.cbxMedico.addItem(medico.getIdMedico() + " - " + medico.getNombres() + " " + medico.getApellidos());
+                String item = medico.getIdMedico() + " - " + medico.getNombres() + " " + medico.getApellidos();
+                System.out.println("Agregando médico: " + item);
+                vista.cbxMedico.addItem(item);
             }
         } catch (Exception e) {
             System.out.println("Error al cargar médicos: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private void cargarMascotas() {
         try {
-            ArrayList<ModeloMascota> mascotas = obtenerMascotas();
+            ModeloMascota mascotaModelo = new ModeloMascota();
+            ArrayList<ModeloMascota> mascotas = mascotaModelo.listarMascotas();
+            System.out.println("Cantidad de mascotas encontradas: " + mascotas.size());
             vista.cbxMascota.removeAllItems();
             vista.cbxMascota.addItem("(Seleccione una mascota)");
             for (ModeloMascota mascota : mascotas) {
-                vista.cbxMascota.addItem(mascota.getId() + " - " + mascota.getNombre());
+                String item = mascota.getId() + " - " + mascota.getNombre();
+                System.out.println("Agregando mascota: " + item);
+                vista.cbxMascota.addItem(item);
             }
         } catch (Exception e) {
             System.out.println("Error al cargar mascotas: " + e.getMessage());
+            e.printStackTrace();
         }
-    }
-
-    private ArrayList<ModeloMascota> obtenerMascotas() {
-        ArrayList<ModeloMascota> lista = new ArrayList<>();
-        try {
-            java.sql.Connection con = com.grupo2.sistemadegestionveterinaria.data.CnnDB.getConeccion();
-            String sql = "SELECT * FROM g2_vet_mascotas WHERE estado=0";
-            java.sql.PreparedStatement ps = con.prepareStatement(sql);
-            java.sql.ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                ModeloMascota mascota = new ModeloMascota();
-                mascota.setId(rs.getInt("id_mascota"));
-                mascota.setNombre(rs.getString("nombre"));
-                mascota.setRaza(rs.getString("raza"));
-                mascota.setEspecie(rs.getString("especie"));
-                mascota.setClienteId(rs.getInt("id_cliente"));
-                mascota.setEstado(rs.getInt("estado"));
-                lista.add(mascota);
-            }
-        } catch (Exception e) {
-            System.out.println("Error al obtener mascotas: " + e.getMessage());
-        }
-        return lista;
     }
 
     private void agendarCita() {
