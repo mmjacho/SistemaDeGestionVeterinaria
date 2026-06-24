@@ -1,0 +1,16 @@
+REPORTE DE CLIENTES Y MASCOTAS
+===============================
+Cédula          Cliente              Mascota              Especie        
+---------------------------------------------------------------
+0956231478      Carlos Mendoza       Max                  Perro          
+0909466906      Galo Izquierdo       Oddie                Perro          
+0909466906      Galo Izquierdo       kami                 Perro          
+0909466906      Galo Izquierdo       Fufi                 Perro          
+1315859801      Mario Jacho          Furioso              Gato           
+0913158598      Nuevo                Perro                Perro          
+0931594592      RUBEN QUIROGA        FIRULAIS             Perro          
+0931594592      RUBEN QUIROGA        FIRULAIS             Perro          
+0931594592      RUBEN QUIROGA        FIRULAIS             Perro          
+0931594592      RUBEN QUIROGA        MANZA                Gato           
+0931594592      RUBEN QUIROGA        MANZA                Perro          
+0300524212      Targelio Quiroga     Maelo                Gato           

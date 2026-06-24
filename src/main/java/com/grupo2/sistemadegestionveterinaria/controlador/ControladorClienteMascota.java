@@ -14,122 +14,152 @@ import java.util.List;
 
 public class ControladorClienteMascota {
 
-  private final DbDAOMod1 dao = new DbDAOMod1();
+    private final DbDAOMod1 dao = new DbDAOMod1();
 
-  // =========================
-  // 💾 GUARDAR (INSERT / UPDATE COMPLETO)
-  // =========================
-  public void guardar(ModeloCliente c, List<ModeloMascota> mascotas) throws Exception {
+    // =========================
+    // 💾 GUARDAR (INSERT / UPDATE COMPLETO)
+    // =========================
+    /**
+     *
+     * @param c
+     * @param mascotas
+     * @throws Exception
+     */
+    public void guardar(ModeloCliente c, List<ModeloMascota> mascotas) throws Exception {
 
-    validarCliente(c);
+        validarCliente(c);
 
-    if (mascotas == null || mascotas.isEmpty()) {
-      throw new Exception("Debe ingresar al menos una mascota");
+        if (mascotas == null || mascotas.isEmpty()) {
+            throw new Exception("Debe ingresar al menos una mascota");
+        }
+
+        for (ModeloMascota m : mascotas) {
+            validarMascota(m);
+        }
+
+        Connection con = CnnDB.getConeccion();
+
+        try {
+            con.setAutoCommit(false);
+
+            // INSERT o UPDATE cliente
+            if (c.getId() == null || c.getId() == 0) {
+                int id = dao.insertarCliente(c, con);
+                c.setId(id);
+            } else {
+                dao.actualizarCliente(c, con);
+            }
+
+            // Guardar mascotas (insert/update)
+            dao.guardarMascotas(mascotas, c.getId(), con);
+
+            con.commit();
+
+        }
+        catch (Exception e) {
+            con.rollback();
+            throw e;
+        }
+        finally {
+            con.close();
+        }
     }
 
-    for (ModeloMascota m : mascotas) {
-      validarMascota(m);
+    // =========================
+    // 🔍 BUSCAR CLIENTE + MASCOTAS
+    // =========================
+    /**
+     *
+     * @param cedula
+     * @param lista
+     * @return
+     * @throws Exception
+     */
+    public ModeloCliente buscar(String cedula, List<ModeloMascota> lista) throws Exception {
+
+        ModeloCliente cA = dao.buscarCliente(cedula);
+
+        if (cA != null) {
+            lista.addAll(dao.buscarMascotas(cA.getId()));
+        }
+
+        return cA;
     }
 
-    Connection con = CnnDB.getConeccion();
-
-    try {
-      con.setAutoCommit(false);
-
-      // INSERT o UPDATE cliente
-      if (c.getId() == null || c.getId() == 0) {
-        int id = dao.insertarCliente(c, con);
-        c.setId(id);
-      } else {
-        dao.actualizarCliente(c, con);
-      }
-
-      // Guardar mascotas (insert/update)
-      dao.guardarMascotas(mascotas, c.getId(), con);
-
-      con.commit();
-
-    } catch (Exception e) {
-      con.rollback();
-      throw e;
-    } finally {
-      con.close();
-    }
-  }
-
-  // =========================
-  // 🔍 BUSCAR CLIENTE + MASCOTAS
-  // =========================
-  public ModeloCliente buscar(String cedula, List<ModeloMascota> lista) throws Exception {
-
-    ModeloCliente c = dao.buscarCliente(cedula);
-
-    if (c != null) {
-      lista.addAll(dao.buscarMascotas(c.getId()));
+    // =========================
+    // 🔎 BUSCAR MASCOTA POR NOMBRE
+    // =========================
+    /**
+     *
+     * @param nombre
+     * @return
+     * @throws Exception
+     */
+    public List<ModeloMascota> buscarMascota(String nombre) throws Exception {
+        return dao.buscarPorNombreMascota(nombre);
     }
 
-    return c;
-  }
+    // =========================
+    // ❌ ELIMINAR MASCOTA
+    // =========================
+    /**
+     *
+     * @param id
+     * @throws Exception
+     */
+    public void eliminarMascota(int id) throws Exception {
 
-  // =========================
-  // 🔎 BUSCAR MASCOTA POR NOMBRE
-  // =========================
-  public List<ModeloMascota> buscarMascota(String nombre) throws Exception {
-    return dao.buscarPorNombreMascota(nombre);
-  }
+        Connection con = CnnDB.getConeccion();
 
-  // =========================
-  // ❌ ELIMINAR MASCOTA
-  // =========================
-  public void eliminarMascota(int id) throws Exception {
+        try {
+            con.setAutoCommit(false);
 
-    Connection con = CnnDB.getConeccion();
+            dao.eliminarMascota(id, con);
 
-    try {
-      con.setAutoCommit(false);
+            con.commit();
 
-      dao.eliminarMascota(id, con);
-
-      con.commit();
-
-    } catch (Exception e) {
-      con.rollback();
-      throw e;
-    } finally {
-      con.close();
-    }
-  }
-
-  // =========================
-  // 🧪 VALIDACIONES
-  // =========================
-  private void validarCliente(ModeloCliente c) throws Exception {
-
-    if (c.getCedula() == null || !c.getCedula().matches("\\d{10}")) {
-      throw new Exception("Cédula inválida");
+        }
+        catch (Exception e) {
+            con.rollback();
+            throw e;
+        }
+        finally {
+            con.close();
+        }
     }
 
-    if (c.getNombres() == null || !c.getNombres().matches("[a-zA-Z ]+")) {
-      throw new Exception("Nombre inválido");
+    // =========================
+    // 🧪 VALIDACIONES
+    // =========================
+    private void validarCliente(ModeloCliente c) throws Exception {
+
+        if (c.getCedula() == null || !c.getCedula().matches("\\d{10}")) {
+            throw new Exception("Cédula inválida");
+        }
+
+        if (c.getNombres() == null || !c.getNombres().matches("[a-zA-Z ]+")) {
+            throw new Exception("Nombre inválido");
+        }
+
+        String telefono = c.getTelefono();
+
+        //  if (telefono != null && !telefono.isEmpty() && !telefono.matches("\\d+")) {
+        //     throw new Exception("Teléfono inválido");
+//        }
     }
 
-    if (c.getTelefono() == null || !c.getTelefono().matches("\\d+")) {
-      throw new Exception("Teléfono inválido");
-    }
-  }
+    private void validarMascota(ModeloMascota m) throws Exception {
 
-  private void validarMascota(ModeloMascota m) throws Exception {
+        if (m.getNombre() == null || m.getNombre().trim().isEmpty()) {
+            throw new Exception("Nombre de mascota requerido");
+        }
 
-    if (m.getNombre() == null || m.getNombre().trim().isEmpty()) {
-      throw new Exception("Nombre de mascota requerido");
-    }
+        if (m.getRaza() == null || m.getRaza().trim().isEmpty()) {
+            throw new Exception("Raza requerida");
+        }
 
-    if (m.getRaza() == null || m.getRaza().trim().isEmpty()) {
-      throw new Exception("Raza requerida");
+        if (m.getEspecie() == null || m.getEspecie().trim().isEmpty()) {
+            throw new Exception("Especie requerida");
+        }
     }
-
-    if (m.getEspecie() == null || m.getEspecie().trim().isEmpty()) {
-      throw new Exception("Especie requerida");
-    }
-  }
 }

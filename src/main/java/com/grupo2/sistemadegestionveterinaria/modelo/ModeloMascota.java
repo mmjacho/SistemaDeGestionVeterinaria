@@ -11,6 +11,10 @@ import java.util.ArrayList;
 
 import com.grupo2.sistemadegestionveterinaria.data.CnnDB;
 
+/**
+ *
+ * @author Galo Izquierdo
+ */
 public class ModeloMascota {
 
   private Integer id;
@@ -21,54 +25,107 @@ public class ModeloMascota {
   private int estado;
 
   // getters y setters
+
+  /**
+   *
+   * @return
+   */
   public Integer getId() {
     return id;
   }
 
+  /**
+   *
+   * @param id
+   */
   public void setId(Integer id) {
     this.id = id;
   }
 
+  /**
+   *
+   * @return
+   */
   public String getNombre() {
     return nombre;
   }
 
+  /**
+   *
+   * @param nombre
+   */
   public void setNombre(String nombre) {
     this.nombre = nombre;
   }
 
+  /**
+   *
+   * @return
+   */
   public String getRaza() {
     return raza;
   }
 
+  /**
+   *
+   * @param raza
+   */
   public void setRaza(String raza) {
     this.raza = raza;
   }
 
+  /**
+   *
+   * @return
+   */
   public String getEspecie() {
     return especie;
   }
 
+  /**
+   *
+   * @param especie
+   */
   public void setEspecie(String especie) {
     this.especie = especie;
   }
 
+  /**
+   *
+   * @return
+   */
   public int getClienteId() {
     return clienteId;
   }
 
+  /**
+   *
+   * @param clienteId
+   */
   public void setClienteId(int clienteId) {
     this.clienteId = clienteId;
   }
 
+  /**
+   *
+   * @return
+   */
   public Integer getEstado() {
     return estado;
   }
 
+  /**
+   *
+   * @param estado
+   */
   public void setEstado(Integer estado) {
     this.estado = estado;
   }
 
+  /**
+   *
+   * @return
+   */
   public ArrayList<ModeloMascota> listarMascotas() {
     ArrayList<ModeloMascota> lista = new ArrayList<>();
     String sql = "SELECT * FROM g2_vet_mascotas";
