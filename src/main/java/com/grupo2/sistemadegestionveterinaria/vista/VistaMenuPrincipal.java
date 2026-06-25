@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import com.grupo2.sistemadegestionveterinaria.modelo.ModeloMedico;
 import com.grupo2.sistemadegestionveterinaria.controlador.ControladorMedico;
+import com.grupo2.sistemadegestionveterinaria.modelo.ModeloAtencion;       // Importado para el MVC
+import com.grupo2.sistemadegestionveterinaria.controlador.ControladorAtencion; // Importado para el MVC
 import com.grupo2.sistemadegestionveterinaria.controlador.ControladorCita;
 
 public class VistaMenuPrincipal extends JFrame {
@@ -45,103 +47,74 @@ public class VistaMenuPrincipal extends JFrame {
 
     // Acciones de los botones para abrir las otras ventanas
     btnModuloMascota.addActionListener(e -> {
-
       setVisible(false);
-
       FrmMascota vista = new FrmMascota();
-
       vista.addWindowListener(new java.awt.event.WindowAdapter() {
-
         @Override
         public void windowClosing(java.awt.event.WindowEvent e) {
-
           setVisible(true);
         }
       });
-
       vista.setVisible(true);
     });
 
     btnModuloMedico.addActionListener(e -> {
-
       setVisible(false);
-
       VistaMedico vista = new VistaMedico();
-
       ModeloMedico modelo = new ModeloMedico();
+      ControladorMedico controlador = new ControladorMedico(modelo, vista);
 
-      ControladorMedico controlador
-              = new ControladorMedico(
-                      modelo,
-                      vista
-              );
-
-      vista.addWindowListener(
-              new java.awt.event.WindowAdapter() {
-
+      vista.addWindowListener(new java.awt.event.WindowAdapter() {
         @Override
-        public void windowClosed(
-                java.awt.event.WindowEvent e
-        ) {
-
+        public void windowClosed(java.awt.event.WindowEvent e) {
           setVisible(true);
         }
       });
-
       vista.setVisible(true);
     });
 
     btnModuloCita.addActionListener(e -> {
-
       setVisible(false);
-
       VistaCita vista = new VistaCita();
-
       vista.addWindowListener(new java.awt.event.WindowAdapter() {
-
         @Override
         public void windowClosing(java.awt.event.WindowEvent e) {
-
           setVisible(true);
         }
       });
-
       vista.setVisible(true);
     });
 
+    // CORREGIDO: Inyección completa del circuito MVC para Atención Veterinaria
     btnModuloAtencion.addActionListener(e -> {
+      setVisible(false); // Oculta el menú principal temporalmente
 
-      setVisible(false);
+      VistaAtencion vistaAtencion = new VistaAtencion();
+      ModeloAtencion modeloAtencion = new ModeloAtencion();
+      
+      // El controlador internamente se encarga de acoplar todo y manejar los eventos de la 'X'
+      ControladorAtencion controlador = new ControladorAtencion(vistaAtencion, modeloAtencion);
 
-      VistaAtencion vista = new VistaAtencion();
-
-      vista.addWindowListener(new java.awt.event.WindowAdapter() {
-
+      // Listener de seguridad por si el controlador usara windowClosed en lugar de windowClosing
+      vistaAtencion.addWindowListener(new java.awt.event.WindowAdapter() {
         @Override
-        public void windowClosing(java.awt.event.WindowEvent e) {
-
+        public void windowClosed(java.awt.event.WindowEvent e) {
           setVisible(true);
         }
       });
 
-      vista.setVisible(true);
+      vistaAtencion.setVisible(true);
     });
 
     btnModuloFactura.addActionListener(e -> {
-
       setVisible(false);
-
       VentanaFacturacion vista = new VentanaFacturacion();
-
       vista.addWindowListener(new java.awt.event.WindowAdapter() {
-
         @Override
         public void windowClosing(java.awt.event.WindowEvent e) {
-
           setVisible(true);
         }
       });
-
       vista.setVisible(true);
     });
 
