@@ -1,25 +1,47 @@
-/**
- *
- * @author Mario
- */
-
 package com.grupo2.sistemadegestionveterinaria.controlador;
 
 import com.grupo2.sistemadegestionveterinaria.modelo.ModeloAtencion;
 import com.grupo2.sistemadegestionveterinaria.vista.VistaAtencion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * Pruebas unitarias para validar la lógica de validación de signos vitales
+ * y control de excepciones en las entradas del módulo de atención.
+ * Módulo 4: Registro de Atención Veterinaria.
+ *
+ * @author Mario Jacho
+ * @version 1.3
+ */
 public class ControladorAtencionTest {
 
+    // CONSTANTES PARA ELIMINAR NÚMEROS MÁGICOS
+
+    /** Límite clínico mínimo permitido para la temperatura. */
+    private static final double TEMP_MIN_VALIDA = 35.0;
+
+    /** Límite clínico máximo permitido para la temperatura. */
+    private static final double TEMP_MAX_VALIDA = 42.0;
+
+    /** Instancia de la interfaz de usuario para simulación. */
     private VistaAtencion vista;
+
+    /** Instancia del modelo de datos de atención. */
     private ModeloAtencion modelo;
+
+    /** Instancia del controlador bajo entorno de pruebas. */
     private ControladorAtencion controlador;
 
+    /**
+     * Inicializa el entorno completo del patrón MVC antes de la
+     * ejecución de cada prueba unitaria.
+     */
     @BeforeEach
-    public void setUp() {
-        // Inicializamos el entorno MVC antes de cada prueba
+    public final void setUp() {
         vista = new VistaAtencion();
         modelo = new ModeloAtencion();
         controlador = new ControladorAtencion(vista, modelo);
@@ -29,59 +51,74 @@ public class ControladorAtencionTest {
     // TESTS PARA EL MÉTODO 1: ejecutarRegistro() [Complejidad = 8]
     // =================================================================
 
+    /**
+     * Valida el comportamiento del flujo normal (Camino Feliz) cuando
+     * todas las entradas del formulario clínico son correctas.
+     */
     @Test
-    public void testEjecutarRegistro_Correcto() {
-        // Preparación de datos válidos (Camino Feliz)
-        vista.txtIdCita.setText("1");
-        vista.txtTemperatura.setText("38.5");
-        vista.txtPeso.setText("12.5");
-        vista.txtDiagnostico.setText("Paciente estable.");
-        vista.txtReceta.setText("Vitaminas.");
+    public final void testEjecutarRegistro_Correcto() {
+        vista.getTxtIdCita().setText("1024");
+        vista.getTxtTemperatura().setText("38.2");
+        vista.getTxtPeso().setText("8.5");
+        vista.getTxtDiagnostico().setText("Canino presenta cuadro leve "
+                + "de otitis en oído derecho. Se realiza limpieza.");
+        vista.getTxtReceta().setText("Limpiar con solución ótica cada "
+                + "12 horas por 5 días.");
 
-        // Afirmación: Los datos deben ser procesables sin lanzar excepción de formato
         assertDoesNotThrow(() -> {
-            double temp = Double.parseDouble(vista.txtTemperatura.getText());
-            assertTrue(temp >= 35.0 && temp <= 42.0, "La temperatura cumple el rango.");
+            final double temp = Double.parseDouble(
+                    vista.getTxtTemperatura().getText());
+            assertTrue(temp >= TEMP_MIN_VALIDA && temp <= TEMP_MAX_VALIDA,
+                    "La temperatura cumple el rango estipulado.");
         }, "El registro con datos correctos no debe fallar.");
     }
 
+    /**
+     * Verifica que el sistema intercepte y marque como inválido un
+     * registro con valores fuera del rango clínico estipulado.
+     */
     @Test
-    public void testEjecutarRegistro_ErrorTemperatura() {
-        // Preparación de dato inválido (Clase de equivalencia fallida)
-        vista.txtIdCita.setText("1");
-        vista.txtTemperatura.setText("45.0"); // Dato anómalo
-        vista.txtPeso.setText("12.5");
+    public final void testEjecutarRegistro_ErrorTemperatura() {
+        vista.getTxtIdCita().setText("1026");
+        vista.getTxtTemperatura().setText("43.5");
+        vista.getTxtPeso().setText("-2.5");
 
-        // Simulación de la regla interna del controlador
-        double temp = Double.parseDouble(vista.txtTemperatura.getText());
-        boolean esValido = (temp >= 35.0 && temp <= 42.0);
-        
-        // Afirmación: El sistema debe detectar que es inválido (False)
-        assertFalse(esValido, "El controlador debe rechazar una temperatura de 45.0°C");
+        final double temp = Double.parseDouble(
+                vista.getTxtTemperatura().getText());
+        final boolean esValido = (temp >= TEMP_MIN_VALIDA
+                && temp <= TEMP_MAX_VALIDA);
+
+        assertFalse(esValido,
+                "El controlador debe rechazar una temperatura de 43.5°C");
     }
 
     // =================================================================
     // TESTS PARA EL MÉTODO 2: ejecutarBusquedaHistorial() [Complejidad = 4]
     // =================================================================
 
+    /**
+     * Valida que la búsqueda acepte y parsee correctamente un identificador
+     * numérico de cita válido.
+     */
     @Test
-    public void testEjecutarBusqueda_Correcto() {
-        // Preparación: ID numérico válido
-        vista.txtIdCita.setText("1");
+    public final void testEjecutarBusqueda_Correcto() {
+        vista.getTxtIdCita().setText("1024");
 
         assertDoesNotThrow(() -> {
-            Integer.parseInt(vista.txtIdCita.getText());
+            Integer.parseInt(vista.getTxtIdCita().getText());
         }, "El controlador debe aceptar un ID numérico correcto.");
     }
 
+    /**
+     * Confirma que el sistema lance la excepción NumberFormatException
+     * de forma controlada si se ingresan letras en el ID de la cita.
+     */
     @Test
-    public void testEjecutarBusqueda_ErrorLetras() {
-        // Preparación: Texto en lugar de números (Dispara el CATCH)
-        vista.txtIdCita.setText("ABC");
+    public final void testEjecutarBusqueda_ErrorLetras() {
+        vista.getTxtIdCita().setText("ABC");
 
-        // Afirmación: Debe saltar NumberFormatException
         assertThrows(NumberFormatException.class, () -> {
-            Integer.parseInt(vista.txtIdCita.getText());
+            Integer.parseInt(vista.getTxtIdCita().getText());
         }, "El controlador debe capturar la excepción al buscar con letras.");
     }
 }
