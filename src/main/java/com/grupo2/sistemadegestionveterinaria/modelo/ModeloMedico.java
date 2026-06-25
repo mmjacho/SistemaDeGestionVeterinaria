@@ -125,7 +125,7 @@ public class ModeloMedico {
         ArrayList<ModeloMedico> lista =
                 new ArrayList<>();
 
-        String sql = "SELECT * FROM g2_vet_medicos";
+        String sql = "SELECT * FROM g2_vet_medicos WHERE estado = true ORDER BY apellidos";
 
         try {
 
