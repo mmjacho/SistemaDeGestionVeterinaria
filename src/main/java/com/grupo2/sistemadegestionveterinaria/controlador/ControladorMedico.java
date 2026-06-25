@@ -211,6 +211,47 @@ if (e.getSource() == vista.btnBuscar) {
         ArrayList<ModeloMedico> lista =
                 modelo.listarMedicos();
 
+    // =========================
+// ORDENAMIENTO BURBUJA
+// POR APELLIDOS
+// =========================
+for (int i = 0; i < lista.size() - 1; i++) {
+
+    for (int j = 0; j < lista.size() - i - 1; j++) {
+
+        String apellido1 =
+                lista.get(j)
+                     .getApellidos();
+
+        String apellido2 =
+                lista.get(j + 1)
+                     .getApellidos();
+
+        //---------------------------------
+        // COMPARAR ALFABÉTICAMENTE
+        //---------------------------------
+        if (apellido1.compareToIgnoreCase(apellido2) > 0) {
+
+            //---------------------------------
+            // INTERCAMBIO
+            //---------------------------------
+            ModeloMedico temporal =
+                    lista.get(j);
+
+            lista.set(
+                    j,
+                    lista.get(j + 1)
+            );
+
+            lista.set(
+                    j + 1,
+                    temporal
+            );
+        }
+    }
+}    
+          
+        
         for (ModeloMedico m : lista) {
 
             Object fila[] = {
@@ -298,6 +339,31 @@ if (e.getSource() == vista.btnBuscar) {
 //-----------------------------------------
 public void actualizarMedico() {
 
+   //-------------------------------------
+// VALIDAR CAMPOS VACÍOS
+//-------------------------------------
+if (vista.txtNombres.getText().trim().isEmpty()
+        || vista.txtApellidos.getText().trim().isEmpty()
+        || vista.txtEspecialidad.getText().trim().isEmpty()
+        || vista.txtTelefono.getText().trim().isEmpty()) {
+
+    JOptionPane.showMessageDialog(
+            null,
+            "Todos los campos son obligatorios"
+    );
+
+    return;
+}   
+if (idMedicoSeleccionado == 0) {
+
+    JOptionPane.showMessageDialog(
+            null,
+            "Seleccione un médico de la tabla para actualizar."
+    );
+
+    return;
+}
+    
     modelo.setIdMedico(
             idMedicoSeleccionado
     );
