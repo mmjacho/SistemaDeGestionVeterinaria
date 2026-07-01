@@ -4,24 +4,49 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
+/**
+ * Ventana de la interfaz gráfica (JFrame) para el módulo de facturación
+ * del sistema de gestión veterinaria.
+ *
+ * @author Grupo 2
+ * @version 1.0
+ */
 public class VentanaFacturacion extends javax.swing.JFrame {
 
   // Componentes que usará el Controlador (públicos para facilitar el acceso)
+  /** Botón para visualizar el historial y realizar operaciones CRUD. */
   public JButton btnVerHistorial;
+  /** Campo de texto para ingresar el nombre del cliente. */
   public JTextField txtNombre;
+  /** Campo de texto para ingresar la cédula o RUC del cliente. */
   public JTextField txtCedula;
+  /** Selector desplegable con los conceptos o servicios a facturar. */
   public JComboBox<String> cbConcepto;
+  /** Campo de texto para ingresar el precio unitario del concepto. */
   public JTextField txtPrecio;
+  /** Selector numérico para definir la cantidad a facturar. */
   public JSpinner spnCantidad;
+  /** Botón para agregar un concepto a la lista de detalles. */
   public JButton btnAgregar;
+  /** Botón para eliminar un ítem seleccionado de los detalles. */
   public JButton btnEliminar;
+  /** Tabla que muestra los detalles actuales de la facturación. */
   public JTable tblDetalles;
+  /** Modelo de datos para la estructura y contenido de la tabla. */
   public DefaultTableModel modeloTabla;
+  /** Campo de texto no editable que muestra el subtotal calculado. */
   public JTextField txtSubtotal;
+  /** Campo de texto no editable que muestra el IVA calculado. */
   public JTextField txtIva;
+  /** Campo de texto no editable que muestra el total final a pagar. */
   public JTextField txtTotal;
+  /** Botón para procesar, guardar y finalizar la factura actual. */
   public JButton btnFacturar;
 
+  /**
+   * Constructor de VentanaFacturacion. Inicializa la interfaz gráfica
+   * manual de facturación y configura las propiedades del JFrame.
+   */
   public VentanaFacturacion() {
     initComponentsManual();
     this.setTitle("Sistema de Gestión Veterinaria - Módulo de Facturación");

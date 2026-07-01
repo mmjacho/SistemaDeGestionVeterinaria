@@ -16,8 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Ventana de la interfaz gráfica (JFrame) para el registro y gestión de
+ * mascotas y clientes en el sistema.
  *
  * @author Galo Izquierdo
+ * @version 1.0
  */
 public class FrmMascota extends javax.swing.JFrame {
 
@@ -27,7 +30,8 @@ public class FrmMascota extends javax.swing.JFrame {
     private boolean buscando = false;
 
     /**
-     * Creates new form FrmMascota
+     * Constructor de FrmMascota. Inicializa los componentes de la interfaz
+     * gráfica y configura la tabla para mostrar la lista de mascotas.
      */
     public FrmMascota() {
         setSize(750, 500);
@@ -336,7 +340,7 @@ public class FrmMascota extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtBuscarActionPerformed() {
-        // Buscar directamente por c�dula
+        // Buscar directamente por cdula
         try {
             ControladorClienteMascota ctrl = new ControladorClienteMascota();
             List<ModeloMascota> lista = new ArrayList<>();
@@ -527,7 +531,10 @@ public class FrmMascota extends javax.swing.JFrame {
     }
 
     /**
-     * @param args the command line arguments
+     * Método de inicio para ejecutar la ventana de gestión de mascotas de
+     * forma independiente.
+     *
+     * @param args los argumentos de la línea de comandos.
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

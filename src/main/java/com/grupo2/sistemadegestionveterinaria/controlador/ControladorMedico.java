@@ -15,6 +15,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+/**
+ * Controlador que gestiona la interacción entre la interfaz VistaMedico y
+ * el modelo de datos ModeloMedico. Implementa la lógica para registrar,
+ * actualizar, listar, buscar y desactivar médicos en el sistema.
+ *
+ * @author Alonso Serrano
+ * @version 1.0
+ */
 public class ControladorMedico implements ActionListener {
 
     //-----------------------------------------
@@ -31,6 +39,13 @@ public class ControladorMedico implements ActionListener {
     //-----------------------------------------
     // CONSTRUCTOR
     //-----------------------------------------
+    /**
+     * Constructor del controlador. Vincula el modelo y la vista de médicos,
+     * registra los manejadores de eventos e inicializa la tabla de datos.
+     *
+     * @param modelo el modelo de datos para las operaciones del médico.
+     * @param vista la ventana de la interfaz gráfica del médico.
+     */
     public ControladorMedico(
             ModeloMedico modelo,
             VistaMedico vista
@@ -70,6 +85,11 @@ public class ControladorMedico implements ActionListener {
     //-----------------------------------------
     // EVENTOS
     //-----------------------------------------
+    /**
+     * Procesa las acciones y clics de los botones de la interfaz gráfica.
+     *
+     * @param e el evento de acción detectado.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -117,12 +137,15 @@ if (e.getSource() == vista.btnBuscar) {
     //-----------------------------------------
     // MÉTODO GUARDAR
     //-----------------------------------------
+    /**
+     * Valida los campos y guarda un nuevo médico en la base de datos.
+     */
     public void guardarMedico() {
         
         //-------------------------------------
 // VALIDAR CAMPOS VACÍOS
 //-------------------------------------
-     if (vista.txtNombres.getText().trim().isEmpty()
+      if (vista.txtNombres.getText().trim().isEmpty()
         || vista.txtApellidos.getText().trim().isEmpty()
         || vista.txtEspecialidad.getText().trim().isEmpty()
         || vista.txtTelefono.getText().trim().isEmpty()) {
@@ -191,6 +214,10 @@ if (e.getSource() == vista.btnBuscar) {
     //-----------------------------------------
     // LISTAR MÉDICOS
     //-----------------------------------------
+    /**
+     * Recupera y ordena alfabéticamente por apellido los médicos activos,
+     * cargándolos en la tabla de la vista.
+     */
     public void listarMedicos() {
 
         String columnas[] = {
@@ -273,6 +300,9 @@ for (int i = 0; i < lista.size() - 1; i++) {
     //-----------------------------------------
     // LIMPIAR CAMPOS
     //-----------------------------------------
+    /**
+     * Restablece los campos de texto del formulario a sus valores vacíos.
+     */
     public void limpiarCampos() {
 
         vista.txtNombres.setText("");
@@ -286,6 +316,10 @@ for (int i = 0; i < lista.size() - 1; i++) {
     //-----------------------------------------
     // CARGAR DATOS DE TABLA
     //-----------------------------------------
+    /**
+     * Carga los datos del médico seleccionado en la tabla hacia los campos
+     * del formulario de la vista.
+     */
     public void cargarDatosTabla() {
 
         int fila =
@@ -337,6 +371,9 @@ for (int i = 0; i < lista.size() - 1; i++) {
     //-----------------------------------------
 // ACTUALIZAR MÉDICO
 //-----------------------------------------
+    /**
+     * Valida los campos y actualiza la información del médico seleccionado.
+     */
 public void actualizarMedico() {
 
    //-------------------------------------
@@ -425,6 +462,10 @@ if (idMedicoSeleccionado == 0) {
 //-----------------------------------------
 // ELIMINAR MÉDICO
 //-----------------------------------------
+/**
+ * Realiza la eliminación lógica (desactivación) del médico seleccionado
+ * tras confirmar con el usuario.
+ */
 public void eliminarMedico() {
 
     //-------------------------------------
@@ -485,6 +526,10 @@ public void eliminarMedico() {
 //-----------------------------------------
 // BUSCAR MÉDICO
 //-----------------------------------------
+/**
+ * Realiza una búsqueda de médicos basada en el criterio ingresado y
+ * actualiza la tabla de resultados.
+ */
 public void buscarMedico() {
 
     //-------------------------------------

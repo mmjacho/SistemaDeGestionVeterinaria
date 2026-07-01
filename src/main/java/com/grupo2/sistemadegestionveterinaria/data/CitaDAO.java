@@ -7,8 +7,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Clase de Acceso a Datos (DAO) para gestionar las citas médicas
+ * veterinarias en la base de datos. Permite realizar operaciones CRUD
+ * y consultas especializadas de disponibilidad de médicos y mascotas.
+ *
+ * @author Grupo 2
+ * @version 1.0
+ */
 public class CitaDAO {
 
+    /**
+     * Registra una nueva cita médica en la base de datos.
+     *
+     * @param cita el objeto ModeloCita con la información de la cita.
+     * @return true si la cita se guardó exitosamente; false de lo contrario.
+     */
     public boolean guardarCita(ModeloCita cita) {
         String sql = "INSERT INTO g2_vet_citas (medico_id, mascota_id, fecha, hora, estado) VALUES (?, ?, ?, ?, ?)";
         try (Connection con = CnnDB.getConeccion();
@@ -26,6 +40,11 @@ public class CitaDAO {
         }
     }
 
+    /**
+     * Obtiene una lista con todas las citas registradas en la base de datos.
+     *
+     * @return una lista de objetos ModeloCita con todas las citas.
+     */
     public ArrayList<ModeloCita> listarCitas() {
         ArrayList<ModeloCita> lista = new ArrayList<>();
         String sql = "SELECT * FROM g2_vet_citas";
@@ -48,6 +67,12 @@ public class CitaDAO {
         return lista;
     }
 
+    /**
+     * Actualiza la información de una cita existente en la base de datos.
+     *
+     * @param cita el objeto ModeloCita con la información actualizada.
+     * @return true si se actualizó con éxito; false en caso contrario.
+     */
     public boolean actualizarCita(ModeloCita cita) {
         String sql = "UPDATE g2_vet_citas SET medico_id=?, mascota_id=?, fecha=?, hora=?, estado=? WHERE id_cita=?";
         try (Connection con = CnnDB.getConeccion();
@@ -66,6 +91,12 @@ public class CitaDAO {
         }
     }
 
+    /**
+     * Cancela una cita médica cambiando su estado a 'CANCELADA'.
+     *
+     * @param id el identificador único de la cita a cancelar.
+     * @return true si se canceló exitosamente; false en caso contrario.
+     */
     public boolean eliminarCita(Integer id) {
         String sql = "UPDATE g2_vet_citas SET estado='CANCELADA' WHERE id_cita=?";
         try (Connection con = CnnDB.getConeccion();
@@ -79,6 +110,12 @@ public class CitaDAO {
         }
     }
 
+    /**
+     * Filtra y obtiene una lista de citas para una fecha específica.
+     *
+     * @param fecha la fecha de la cita en formato de texto.
+     * @return una lista de objetos ModeloCita programadas para esa fecha.
+     */
     public ArrayList<ModeloCita> listarCitasPorFecha(String fecha) {
         ArrayList<ModeloCita> lista = new ArrayList<>();
         String sql = "SELECT * FROM g2_vet_citas WHERE fecha = ?";
@@ -103,6 +140,12 @@ public class CitaDAO {
         return lista;
     }
 
+    /**
+     * Obtiene todas las citas asignadas a un médico veterinario específico.
+     *
+     * @param medicoId el identificador del médico veterinario.
+     * @return una lista de objetos ModeloCita asignadas a dicho médico.
+     */
     public ArrayList<ModeloCita> obtenerCitasPorMedico(int medicoId) {
         ArrayList<ModeloCita> lista = new ArrayList<>();
         String sql = "SELECT * FROM g2_vet_citas WHERE medico_id = ?";
@@ -127,6 +170,12 @@ public class CitaDAO {
         return lista;
     }
 
+    /**
+     * Cuenta el número total de citas según su estado actual.
+     *
+     * @param estado el estado de la cita por el cual filtrar.
+     * @return la cantidad total de citas en el estado especificado.
+     */
     public int contarCitasPorEstado(String estado) {
         String sql = "SELECT COUNT(*) FROM g2_vet_citas WHERE estado = ?";
         try (Connection con = CnnDB.getConeccion();
@@ -141,7 +190,15 @@ public class CitaDAO {
         return 0;
     }
 
-    // Métodos de validación requeridos por el controlador
+    /**
+     * Verifica si un médico tiene disponibilidad en una fecha y hora dadas.
+     *
+     * @param medicoId el identificador del médico a verificar.
+     * @param fecha la fecha de la cita a consultar.
+     * @param hora la hora de la cita a consultar.
+     * @param idCita el identificador de la cita (opcional, para exclusión).
+     * @return true si el médico está disponible; false en caso contrario.
+     */
     public boolean verificarDisponibilidadMedico(int medicoId, String fecha, String hora, Integer idCita) {
         String sql = "SELECT COUNT(*) FROM g2_vet_citas WHERE medico_id=? AND fecha=? AND hora=? AND estado!='CANCELADA'";
         if (idCita != null) sql += " AND id_cita != " + idCita;
@@ -159,6 +216,15 @@ public class CitaDAO {
         return false;
     }
 
+    /**
+     * Verifica si una mascota tiene disponibilidad en una fecha y hora dadas.
+     *
+     * @param mascotaId el identificador de la mascota a verificar.
+     * @param fecha la fecha de la cita a consultar.
+     * @param hora la hora de la cita a consultar.
+     * @param idCita el identificador de la cita (opcional, para exclusión).
+     * @return true si la mascota está disponible; false en caso contrario.
+     */
     public boolean verificarDisponibilidadMascota(int mascotaId, String fecha, String hora, Integer idCita) {
         String sql = "SELECT COUNT(*) FROM g2_vet_citas WHERE mascota_id=? AND fecha=? AND hora=? AND estado!='CANCELADA'";
         if (idCita != null) sql += " AND id_cita != " + idCita;

@@ -10,8 +10,24 @@ import java.util.List;
 import com.grupo2.sistemadegestionveterinaria.modelo.Factura;
 import com.grupo2.sistemadegestionveterinaria.modelo.DetalleFactura;
 
+/**
+ * Clase de Acceso a Datos (DAO) para la gestión de facturas y sus detalles
+ * en la base de datos. Permite realizar operaciones transaccionales para
+ * el registro completo de facturas.
+ *
+ * @author Grupo 2
+ * @version 1.0
+ */
 public class FacturaDAO {
 
+  /**
+   * Registra una factura completa y sus detalles de manera transaccional.
+   *
+   * @param factura la cabecera de la factura con los totales.
+   * @param detalles la lista de detalles asociados a la factura.
+   * @return true si el registro fue exitoso; false de lo contrario.
+   * @throws Exception si ocurre algún error durante la conexión o inserción.
+   */
   public boolean registrarFacturaCompleta(Factura factura, List<DetalleFactura> detalles) throws Exception {
     String sqlFactura = "INSERT INTO factura (nombre_cliente, cedula_cliente, subtotal, iva, total) VALUES (?, ?, ?, ?, ?)";
     String sqlDetalle = "INSERT INTO detalle_factura (id_factura, concepto, precio_unitario, cantidad, precio_final) VALUES (?, ?, ?, ?, ?)";
@@ -74,7 +90,12 @@ public class FacturaDAO {
     }
   }
 
-  // 1. LEER (Read): Obtener todas las facturas de la base de datos
+  /**
+   * Obtiene la lista completa de todas las facturas ordenadas por fecha.
+   *
+   * @return una lista de objetos Factura.
+   * @throws Exception si ocurre algún error durante la consulta.
+   */
   public List<Factura> obtenerTodasLasFacturas() throws Exception {
     List<Factura> lista = new ArrayList<>();
     String sql = "SELECT * FROM factura ORDER BY id_factura DESC";
@@ -98,7 +119,13 @@ public class FacturaDAO {
     return lista;
   }
 
-  // 2. ELIMINAR (Delete): Borrar una factura por su ID
+  /**
+   * Elimina una factura específica de la base de datos según su ID.
+   *
+   * @param idFactura el identificador único de la factura.
+   * @return true si se eliminó correctamente; false de lo contrario.
+   * @throws Exception si ocurre algún error durante la eliminación.
+   */
   public boolean eliminarFactura(int idFactura) throws Exception {
     String sql = "DELETE FROM factura WHERE id_factura = ?";
     try (Connection con = CnnDB.getConeccion();
@@ -111,7 +138,15 @@ public class FacturaDAO {
     }
   }
 
-  // 3. ACTUALIZAR (Update): Modificar los datos básicos del cliente en la factura
+  /**
+   * Actualiza el nombre y cédula del cliente en una factura existente.
+   *
+   * @param idFactura el identificador único de la factura.
+   * @param nuevoNombre el nuevo nombre del cliente.
+   * @param nuevaCedula la nueva cédula del cliente.
+   * @return true si se actualizó correctamente; false de lo contrario.
+   * @throws Exception si ocurre algún error durante la actualización.
+   */
   public boolean actualizarFactura(int idFactura, String nuevoNombre, String nuevaCedula) throws Exception {
     String sql = "UPDATE factura SET nombre_cliente = ?, cedula_cliente = ? WHERE id_factura = ?";
     try (Connection con = CnnDB.getConeccion();

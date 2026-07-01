@@ -27,9 +27,10 @@ import java.awt.Font;
 import java.awt.print.PrinterException;
 
 /**
- * Coordinador lógico y controlador para el módulo de Gestión de Atención
- * Veterinaria. Enlaza los eventos de la interfaz gráfica con las transacciones
- * de persistencia de datos. Módulo 4: Registro de Atención Veterinaria.
+ * Coordinador lógico y controlador para el módulo de Gestión de
+ * Atención Veterinaria. Enlaza los eventos de la interfaz gráfica con
+ * las transacciones de persistencia de datos.
+ * Módulo 4: Registro de Atención Veterinaria.
  *
  * @author Mario Jacho
  * @version 1.1

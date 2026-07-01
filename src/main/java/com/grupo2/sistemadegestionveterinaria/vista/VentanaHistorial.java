@@ -4,14 +4,44 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
+/**
+ * Diálogo modal que despliega el historial completo de facturas emitidas.
+ * Ofrece controles visuales para realizar operaciones CRUD (visualización,
+ * edición y eliminación) sobre las facturas registradas.
+ *
+ * @author Grupo 2
+ * @version 1.0
+ */
 public class VentanaHistorial extends javax.swing.JDialog {
 
+  /**
+   * Tabla gráfica para mostrar la lista de facturas.
+   */
   public JTable tblHistorial;
+  /**
+   * Modelo de datos para estructurar las filas de la tabla de facturas.
+   */
   public DefaultTableModel modeloHistorial;
+  /**
+   * Botón para modificar los datos de cabecera de la factura.
+   */
   public JButton btnModificar;
+  /**
+   * Botón para eliminar físicamente la factura seleccionada.
+   */
   public JButton btnEliminarFactura;
+  /**
+   * Botón para recargar y refrescar los datos desde la base de datos.
+   */
   public JButton btnActualizarLista;
 
+  /**
+   * Constructor de VentanaHistorial.
+   * Inicializa la interfaz de usuario, define el marco padre y establece
+   * el comportamiento modal para el control del historial.
+   *
+   * @param padre la ventana Frame padre que invoca a este diálogo.
+   */
   public VentanaHistorial(Frame padre) {
     super(padre, "Historial de Facturas Emitidas (CRUD)", true);
     initComponents();

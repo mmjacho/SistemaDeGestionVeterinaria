@@ -15,12 +15,27 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Controlador que gestiona la facturación en el sistema.
+ * Coordina las operaciones de adición y eliminación de ítems de facturación,
+ * el cálculo de subtotales, IVA y totales, y la interacción con FacturaDAO.
+ *
+ * @author Grupo 2
+ * @version 1.0
+ */
 public class FacturaControlador {
 
   private VentanaFacturacion vista;
   private FacturaDAO dao;
   private List<DetalleFactura> listaDetalles;
 
+  /**
+   * Constructor de FacturaControlador. Vincula la interfaz gráfica de
+   * facturación con el acceso a datos e inicializa el listado de detalles.
+   *
+   * @param vista la ventana VentanaFacturacion que despliega los controles.
+   * @param dao el objeto de acceso a datos para la persistencia de facturas.
+   */
   public FacturaControlador(VentanaFacturacion vista, FacturaDAO dao) {
     this.vista = vista;
     this.dao = dao;
@@ -107,6 +122,10 @@ public class FacturaControlador {
   }
 
   // --- LÓGICA DE CÁLCULO EN CADENA PARA EL TESTING DU-CADENA ---
+  /**
+   * Recalcula la suma inductiva de los subtotales, aplica la tasa vigente de
+   * IVA (15%) y actualiza las cajas de texto correspondientes en la vista.
+   */
   public void recalcularTotales() {
     double acumSubtotal = 0.0;
     double calcIva = 0.0;

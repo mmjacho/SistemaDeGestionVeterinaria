@@ -1,10 +1,10 @@
 package com.grupo2.sistemadegestionveterinaria.modelo;
 
 /**
- * Representa el modelo de datos para la entidad de Atención Veterinaria. Esta
- * clase almacena la información de los parámetros clínicos recopilados durante
- * la consulta médica de un paciente. Módulo 4: Registro de Atención
- * Veterinaria.
+ * Representa el modelo de datos para la entidad de Atención Veterinaria.
+ * Esta clase almacena la información de los parámetros clínicos
+ * recopilados durante la consulta médica de un paciente.
+ * Módulo 4: Registro de Atención Veterinaria.
  *
  * @author Mario Jacho
  * @version 1.1
@@ -96,7 +96,7 @@ public class ModeloAtencion {
     /**
      * Establece la temperatura corporal registrada del paciente.
      *
-     * @param nuevaTemperatura La temperatura medida en grados Celsius (°C).
+     * @param nuevaTemperatura la temperatura en grados Celsius (°C).
      */
     public final void setTemperatura(final double nuevaTemperatura) {
         this.temperatura = nuevaTemperatura;
@@ -132,7 +132,7 @@ public class ModeloAtencion {
     /**
      * Establece el diagnóstico clínico de la consulta médica.
      *
-     * @param nuevoDiagnostico La descripción textual del diagnóstico emitido.
+     * @param nuevoDiagnostico el diagnóstico emitido en texto.
      */
     public final void setDiagnostico(final String nuevoDiagnostico) {
         this.diagnostico = nuevoDiagnostico;
@@ -141,16 +141,16 @@ public class ModeloAtencion {
     /**
      * Obtiene la receta médica expedida para la atención actual.
      *
-     * @return Una cadena de texto con el tratamiento o medicamentos prescritos.
+     * @return el tratamiento o medicamentos prescritos.
      */
     public final String getReceta() {
         return receta;
     }
 
     /**
-     * Establece la receta médica con las indicaciones del tratamiento a seguir.
+     * Establece la receta médica con las indicaciones del tratamiento.
      *
-     * @param nuevaReceta El detalle de la prescripción médica o tratamiento.
+     * @param nuevaReceta la prescripción médica o tratamiento.
      */
     public final void setReceta(final String nuevaReceta) {
         this.receta = nuevaReceta;

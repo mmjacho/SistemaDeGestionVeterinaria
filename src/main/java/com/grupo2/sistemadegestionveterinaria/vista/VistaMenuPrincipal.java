@@ -12,10 +12,27 @@ import com.grupo2.sistemadegestionveterinaria.modelo.ModeloAtencion;       // Im
 import com.grupo2.sistemadegestionveterinaria.controlador.ControladorAtencion; // Importado para el MVC
 import com.grupo2.sistemadegestionveterinaria.controlador.ControladorCita;
 
+/**
+ * Ventana gráfica que actúa como menú principal y panel de control.
+ * Facilita el acceso directo a los distintos módulos operativos del sistema,
+ * como la gestión de mascotas, médicos, citas, atenciones y facturación.
+ *
+ * @author Grupo 2
+ * @version 1.0
+ */
 public class VistaMenuPrincipal extends JFrame {
 
+  /**
+   * Botones de navegación para ingresar a los módulos de mascotas, médicos,
+   * citas, atenciones clínicas y facturación.
+   */
   public JButton btnModuloMascota, btnModuloMedico, btnModuloCita, btnModuloAtencion, btnModuloFactura;
 
+  /**
+   * Constructor de VistaMenuPrincipal.
+   * Diseña el contenedor principal, inicializa los botones de navegación
+   * y configura los disparadores de eventos para abrir cada módulo.
+   */
   public VistaMenuPrincipal() {
     setTitle("Sistema de Gestión Veterinaria - Menú Principal");
     setSize(550, 450);
@@ -122,7 +139,11 @@ public class VistaMenuPrincipal extends JFrame {
     add(panelPrincipal);
   }
 
-  // Método para correr esta interfaz de forma independiente
+  /**
+   * Método principal para iniciar la interfaz gráfica del menú principal.
+   *
+   * @param args los argumentos de la línea de comandos.
+   */
   public static void main(String[] args) {
     SwingUtilities.invokeLater(() -> {
       new VistaMenuPrincipal().setVisible(true);

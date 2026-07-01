@@ -7,12 +7,34 @@ package com.grupo2.sistemadegestionveterinaria.vista;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Ventana gráfica para el inicio de sesión de los usuarios en el sistema.
+ * Permite ingresar las credenciales de seguridad (usuario y contraseña)
+ * para autorizar el acceso a las funciones del software.
+ *
+ * @author Grupo 2
+ * @version 1.0
+ */
 public class VistaLogin extends JFrame {
     
+    /**
+     * Campo de texto para ingresar el nombre de usuario.
+     */
     public JTextField txtUsuario;
+    /**
+     * Campo de contraseña para ingresar la clave de seguridad.
+     */
     public JPasswordField txtPassword;
+    /**
+     * Botón para ingresar al sistema y botón para salir de la aplicación.
+     */
     public JButton btnIngresar, btnSalir;
 
+    /**
+     * Constructor de VistaLogin.
+     * Diseña y posiciona todos los componentes visuales de la interfaz de
+     * inicio de sesión e inicializa las acciones básicas.
+     */
     public VistaLogin() {
         setTitle("Sistema de Gestión Veterinaria - Login");
         setSize(450, 300);
@@ -67,7 +89,11 @@ public class VistaLogin extends JFrame {
         add(panelPrincipal);
     }
 
-    // Método para correr esta interfaz de forma independiente
+    /**
+     * Método principal para iniciar la interfaz gráfica de inicio de sesión.
+     *
+     * @param args los argumentos de la línea de comandos.
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new VistaLogin().setVisible(true);

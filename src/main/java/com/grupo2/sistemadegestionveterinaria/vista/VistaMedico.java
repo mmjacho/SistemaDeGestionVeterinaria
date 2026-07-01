@@ -11,26 +11,73 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import com.grupo2.sistemadegestionveterinaria.vista.VistaMenuPrincipal;
 
+/**
+ * Ventana gráfica para el registro, edición, eliminación lógica, búsqueda
+ * y visualización de los datos de los médicos veterinarios en el sistema.
+ *
+ * @author Grupo 2
+ * @version 1.0
+ */
 public class VistaMedico extends JFrame {
 
     // CAMPOS
+    /**
+     * Campo de texto para ingresar los nombres del médico.
+     */
     public JTextField txtNombres;
+    /**
+     * Campo de texto para ingresar los apellidos del médico.
+     */
     public JTextField txtApellidos;
+    /**
+     * Campo de texto para ingresar la especialidad médica del veterinario.
+     */
     public JTextField txtEspecialidad;
+    /**
+     * Campo de texto para ingresar el número de teléfono del médico.
+     */
     public JTextField txtTelefono;
+    /**
+     * Casilla de verificación para marcar el estado activo del médico.
+     */
     public JCheckBox chkEstado;
 
     // BOTONES
+    /**
+     * Botón para guardar o registrar un nuevo médico en la base de datos.
+     */
     public JButton btnGuardar;
+    /**
+     * Botón para realizar búsquedas de médicos por criterios.
+     */
     public JButton btnBuscar;
+    /**
+     * Botón para actualizar los datos de un médico seleccionado.
+     */
     public JButton btnActualizar;
+    /**
+     * Botón para realizar la desactivación o eliminación de un médico.
+     */
     public JButton btnEliminar;
+    /**
+     * Botón para restablecer y vaciar los campos del formulario.
+     */
     public JButton btnLimpiar;
+    /**
+     * Botón para cerrar la ventana y regresar al menú principal.
+     */
     public JButton btnRegresar;
 
     // TABLA
+    /**
+     * Tabla para desplegar los registros de médicos en la interfaz.
+     */
     public JTable tablaMedicos;
 
+    /**
+     * Constructor de VistaMedico.
+     * Invoca la inicialización de los componentes gráficos de la ventana.
+     */
     public VistaMedico() {
 
         iniciarComponentes();
@@ -445,6 +492,11 @@ panelFormulario.add(chkEstado);
     //----------------------------------------
     // MAIN
     //----------------------------------------
+    /**
+     * Método principal para la ejecución independiente del módulo de médicos.
+     *
+     * @param args los argumentos de la línea de comandos.
+     */
     public static void main(String[] args) {
 
     SwingUtilities.invokeLater(() -> {

@@ -12,6 +12,14 @@ import com.grupo2.sistemadegestionveterinaria.data.CnnDB;
 import java.sql.Connection;
 import java.util.List;
 
+/**
+ * Controlador que coordina la gestión conjunta de clientes y mascotas.
+ * Permite registrar, buscar y eliminar información relacionada aplicando
+ * reglas de validación de negocio antes de la persistencia.
+ *
+ * @author Galo Izquierdo
+ * @version 1.0
+ */
 public class ControladorClienteMascota {
 
     private final DbDAOMod1 dao = new DbDAOMod1();
@@ -20,10 +28,13 @@ public class ControladorClienteMascota {
     // 💾 GUARDAR (INSERT / UPDATE COMPLETO)
     // =========================
     /**
+     * Guarda o actualiza un cliente y su lista de mascotas asociadas.
+     * Realiza las validaciones de negocio antes de procesar la transacción.
      *
-     * @param c
-     * @param mascotas
-     * @throws Exception
+     * @param c el modelo del cliente a guardar o actualizar.
+     * @param mascotas la lista de mascotas vinculadas al cliente.
+     * @throws Exception si hay datos inválidos o falla la transacción en la
+     *                   base de datos.
      */
     public void guardar(ModeloCliente c, List<ModeloMascota> mascotas) throws Exception {
 
@@ -69,11 +80,13 @@ public class ControladorClienteMascota {
     // 🔍 BUSCAR CLIENTE + MASCOTAS
     // =========================
     /**
+     * Busca un cliente por su cédula y carga todas sus mascotas asociadas.
      *
-     * @param cedula
-     * @param lista
-     * @return
-     * @throws Exception
+     * @param cedula la cédula del cliente a buscar.
+     * @param lista la lista donde se agregarán las mascotas encontradas.
+     * @return el modelo del cliente encontrado, o null si no existe.
+     * @throws Exception si ocurre un error durante la búsqueda en la base
+     *                   de datos.
      */
     public ModeloCliente buscar(String cedula, List<ModeloMascota> lista) throws Exception {
 
@@ -90,10 +103,11 @@ public class ControladorClienteMascota {
     // 🔎 BUSCAR MASCOTA POR NOMBRE
     // =========================
     /**
+     * Busca mascotas en el sistema que coincidan con el nombre especificado.
      *
-     * @param nombre
-     * @return
-     * @throws Exception
+     * @param nombre el nombre de la mascota o coincidencia a buscar.
+     * @return una lista de mascotas con el nombre especificado.
+     * @throws Exception si ocurre un error al realizar la consulta.
      */
     public List<ModeloMascota> buscarMascota(String nombre) throws Exception {
         return dao.buscarPorNombreMascota(nombre);
@@ -103,9 +117,10 @@ public class ControladorClienteMascota {
     // ❌ ELIMINAR MASCOTA
     // =========================
     /**
+     * Elimina lógicamente una mascota del sistema según su identificador.
      *
-     * @param id
-     * @throws Exception
+     * @param id el identificador único de la mascota a eliminar.
+     * @throws Exception si ocurre un error al eliminar el registro.
      */
     public void eliminarMascota(int id) throws Exception {
 
@@ -145,7 +160,7 @@ public class ControladorClienteMascota {
 
         //  if (telefono != null && !telefono.isEmpty() && !telefono.matches("\\d+")) {
         //     throw new Exception("Teléfono inválido");
-//        }
+        //     }
     }
 
     private void validarMascota(ModeloMascota m) throws Exception {

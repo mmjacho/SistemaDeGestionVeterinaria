@@ -14,15 +14,30 @@ import com.grupo2.sistemadegestionveterinaria.modelo.ModeloMascota;
 import com.grupo2.sistemadegestionveterinaria.modelo.ModeloMedico;
 import com.grupo2.sistemadegestionveterinaria.vista.VistaCita;
 
+/**
+ * Controlador para la gestión de citas médicas en el sistema. Conecta la
+ * interfaz de usuario VistaCita con las operaciones de datos de CitaDAO,
+ * gestionando el agendamiento, filtrado e impresión de reportes.
+ *
+ * @author Grupo 2
+ * @version 1.0
+ */
 public class ControladorCita {
 
-    private VistaCita vista;
-    private CitaDAO dao;
-    private ModeloCita modelo;
-    private ArrayList<ModeloCita> citasActuales; // Cache para guardar/imprimir reportes
+    private final VistaCita vista;
+    private final CitaDAO dao;
+    private final ModeloCita modelo;
+    private final ArrayList<ModeloCita> citasActuales;
 
-    public ControladorCita(VistaCita vista) {
-        this.vista = vista;
+    /**
+     * Constructor del controlador. Vincula la vista de gestión de citas,
+     * registra los eventos de interacción y carga los listados iniciales de
+     * médicos, mascotas y citas.
+     *
+     * @param vista la ventana VistaCita que despliega los controles de la cita.
+     */
+    public ControladorCita(final VistaCita v) {
+        this.vista = v; // Ya no hay conflicto de nombres
         this.dao = new CitaDAO();
         this.modelo = new ModeloCita();
         this.citasActuales = new ArrayList<>();
@@ -51,9 +66,10 @@ public class ControladorCita {
         vista.tablaCitas.getSelectionModel().addListSelectionListener(e -> {
             int fila = vista.tablaCitas.getSelectedRow();
             if (fila != -1) {
-                // Rellenar formulario al hacer clic en un elemento de la tabla para facilitar modificaciones
-                vista.txtFecha.setText(vista.tablaCitas.getValueAt(fila, 3).toString());
-                vista.txtHora.setText(vista.tablaCitas.getValueAt(fila, 4).toString());
+                vista.txtFecha.setText(vista.tablaCitas.getValueAt(
+                        fila, 3).toString());
+                vista.txtHora.setText(vista.tablaCitas.getValueAt(
+                        fila, 4).toString());
             }
         });
     }
@@ -89,7 +105,8 @@ public class ControladorCita {
     }
 
     private void cargarCitas() {
-        citasActuales = dao.listarCitas();
+        citasActuales.clear();
+        citasActuales.addAll(dao.listarCitas());
         actualizarTablaCitas(citasActuales);
     }
 
@@ -106,7 +123,8 @@ public class ControladorCita {
         }
         vista.tablaCitas.setModel(new DefaultTableModel(
                 datos,
-                new String[]{"ID Cita", "Médico ID", "Mascota ID", "Fecha", "Hora", "Estado"}
+                new String[]{"ID Cita", "Médico ID", "Mascota ID",
+                    "Fecha", "Hora", "Estado"}
         ));
     }
 
@@ -118,8 +136,10 @@ public class ControladorCita {
             String hora = vista.txtHora.getText().trim();
 
             if (medicoSeleccionado.equals("(Seleccione un médico)")
-                    || mascotaSeleccionada.equals("(Seleccione una mascota)") || fecha.isEmpty() || hora.isEmpty()) {
-                JOptionPane.showMessageDialog(vista, "Por favor complete todos los campos");
+                    || mascotaSeleccionada.equals(
+                            "(Seleccione una mascota)") || fecha.isEmpty() || hora.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        vista, "Por favor complete todos los campos");
                 return;
             }
 
@@ -127,9 +147,12 @@ public class ControladorCita {
             int mascotaId = Integer.parseInt(mascotaSeleccionada.split(" - ")[0]);
             String fechaMySQL = convertirAFechaMySQL(fecha);
 
-            if (!dao.verificarDisponibilidadMedico(medicoId, fechaMySQL, hora, null)
-                    || !dao.verificarDisponibilidadMascota(mascotaId, fechaMySQL, hora, null)) {
-                JOptionPane.showMessageDialog(vista, "Conflicto de agenda: El médico o la mascota ya se encuentran ocupados.");
+            if (!dao.verificarDisponibilidadMedico(
+                    medicoId, fechaMySQL, hora, null)
+                    || !dao.verificarDisponibilidadMascota(
+                            mascotaId, fechaMySQL, hora, null)) {
+                JOptionPane.showMessageDialog(
+                        vista, "Conflicto de agenda: El médico o la mascota ya se encuentran ocupados.");
                 return;
             }
 
@@ -140,12 +163,14 @@ public class ControladorCita {
             modelo.setEstado("PROGRAMADA");
 
             if (dao.guardarCita(modelo)) {
-                JOptionPane.showMessageDialog(vista, "Cita agendada exitosamente");
+                JOptionPane.showMessageDialog(
+                        vista, "Cita agendada exitosamente");
                 limpiarCampos();
                 cargarCitas();
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(vista, "Error: " + e.getMessage());
+            JOptionPane.showMessageDialog(
+                    vista, "Error: " + e.getMessage());
         }
     }
 
@@ -153,7 +178,8 @@ public class ControladorCita {
         try {
             int fila = vista.tablaCitas.getSelectedRow();
             if (fila == -1) {
-                JOptionPane.showMessageDialog(vista, "Seleccione una cita de la tabla para reprogramar");
+                JOptionPane.showMessageDialog(
+                        vista, "Seleccione una cita de la tabla para reprogramar");
                 return;
             }
 
@@ -168,9 +194,11 @@ public class ControladorCita {
                 return;
             }
 
-            int idCita = Integer.parseInt(vista.tablaCitas.getValueAt(fila, 0).toString());
+            int idCita = Integer.parseInt(
+                    vista.tablaCitas.getValueAt(fila, 0).toString());
             int medicoId = Integer.parseInt(medicoSeleccionado.split(" - ")[0]);
-            int mascotaId = Integer.parseInt(mascotaSeleccionada.split(" - ")[0]);
+            int mascotaId = Integer.parseInt(
+                    mascotaSeleccionada.split(" - ")[0]);
             String fechaMySQL = convertirAFechaMySQL(fecha);
 
             modelo.setId(idCita);
@@ -181,26 +209,32 @@ public class ControladorCita {
             modelo.setEstado("REPROGRAMADA");
 
             if (dao.actualizarCita(modelo)) {
-                JOptionPane.showMessageDialog(vista, "Cita reprogramada exitosamente");
+                JOptionPane.showMessageDialog(
+                        vista, "Cita reprogramada exitosamente");
                 limpiarCampos();
                 cargarCitas();
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(vista, "Error al reprogramar: " + e.getMessage());
+            JOptionPane.showMessageDialog(
+                    vista, "Error al reprogramar: " + e.getMessage());
         }
     }
 
     private void cancelarCita() {
         int fila = vista.tablaCitas.getSelectedRow();
         if (fila == -1) {
-            JOptionPane.showMessageDialog(vista, "Seleccione la cita que desea dar de baja");
+            JOptionPane.showMessageDialog(
+                    vista, "Seleccione la cita que desea dar de baja");
             return;
         }
-        int confirmacion = JOptionPane.showConfirmDialog(vista, "¿Está seguro de cambiar el estado de la cita a CANCELADA?", "Confirmar Acción", JOptionPane.YES_NO_OPTION);
+        int confirmacion = JOptionPane.showConfirmDialog(
+                vista, "¿Está seguro de cambiar el estado de la cita a CANCELADA?", "Confirmar Acción", JOptionPane.YES_NO_OPTION);
         if (confirmacion == JOptionPane.YES_OPTION) {
-            int idCita = Integer.parseInt(vista.tablaCitas.getValueAt(fila, 0).toString());
+            int idCita = Integer.parseInt(
+                    vista.tablaCitas.getValueAt(fila, 0).toString());
             if (dao.eliminarCita(idCita)) {
-                JOptionPane.showMessageDialog(vista, "Cita marcada como cancelada");
+                JOptionPane.showMessageDialog(
+                        vista, "Cita marcada como cancelada");
                 cargarCitas();
             }
         }
@@ -214,7 +248,8 @@ public class ControladorCita {
                 return;
             }
             String fechaMySQL = convertirAFechaMySQL(fechaFiltro);
-            citasActuales = dao.listarCitasPorFecha(fechaMySQL);
+            citasActuales.clear();
+            citasActuales.addAll(dao.listarCitasPorFecha(fechaMySQL));
             actualizarTablaCitas(citasActuales);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(vista, "Error en filtrado: " + e.getMessage());
@@ -245,7 +280,8 @@ public class ControladorCita {
                         JOptionPane.showMessageDialog(vista, "Escriba una fecha en el formulario principal (DD/MM/YYYY) para generar este reporte");
                         return;
                     }
-                    citasActuales = dao.listarCitasPorFecha(convertirAFechaMySQL(f)); // <--- Aquí causaba el error de compilación
+                    citasActuales.clear();
+                    citasActuales.addAll(dao.listarCitasPorFecha(convertirAFechaMySQL(f)));
                     actualizarTablaCitas(citasActuales);
                     vista.lblResumen.setText("Reporte Diario: " + citasActuales.size() + " registros hallados para " + f);
                     break;
@@ -257,7 +293,8 @@ public class ControladorCita {
                         return;
                     }
                     int medicoId = Integer.parseInt(med.split(" - ")[0]);
-                    citasActuales = dao.obtenerCitasPorMedico(medicoId);
+                    citasActuales.clear();
+                    citasActuales.addAll(dao.obtenerCitasPorMedico(medicoId));
                     actualizarTablaCitas(citasActuales);
                     vista.lblResumen.setText("Citas asignadas al Médico (" + med + "): " + citasActuales.size() + " registros.");
                     break;

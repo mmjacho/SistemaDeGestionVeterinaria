@@ -7,14 +7,39 @@ import java.awt.GridLayout;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * Ventana de la interfaz gráfica (JFrame) para la gestión y reportes
+ * de citas médicas veterinarias.
+ *
+ * @author Grupo 2
+ * @version 1.0
+ */
 public class VistaCita extends JFrame {
 
+    /**
+     * Componentes de selección (combo boxes) para el médico, mascota y
+     * tipo de reporte.
+     */
     public JComboBox<String> cbxMedico, cbxMascota, cbxTipoReporte;
+    /**
+     * Campos de entrada de texto para la fecha, hora y filtro de fecha
+     * de las citas.
+     */
     public JTextField txtFecha, txtHora, txtFiltroFecha;
+    /**
+     * Botones de acción para las operaciones CRUD y generación de reportes
+     * de citas.
+     */
     public JButton btnAgendar, btnReprogramar, btnCancelar, btnFiltrar, btnLimpiarFiltro, btnReportes, btnExportarCSV, btnImprimir;
+    /** Tabla para el despliegue de la lista de citas médicas. */
     public JTable tablaCitas;
+    /** Etiqueta de texto para mostrar el resumen del reporte de citas. */
     public JLabel lblResumen;
 
+    /**
+     * Constructor de VistaCita. Inicializa los componentes de la ventana,
+     * organiza la estructura de paneles y distribuye los controles.
+     */
     public VistaCita() {
         setTitle("Módulo Integrado: Gestión e Historial de Citas Veterinarias");
         setSize(900, 600);
@@ -108,6 +133,12 @@ public class VistaCita extends JFrame {
         add(panelPrincipal);
     }
 
+    /**
+     * Método de inicio para ejecutar la interfaz de gestión de citas de
+     * forma segura e independiente.
+     *
+     * @param args los argumentos de la línea de comandos.
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             VistaCita vista = new VistaCita();

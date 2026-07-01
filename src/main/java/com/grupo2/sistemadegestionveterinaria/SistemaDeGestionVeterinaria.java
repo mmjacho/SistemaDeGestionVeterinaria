@@ -9,19 +9,36 @@ import com.grupo2.sistemadegestionveterinaria.modelo.ModeloUsuario;
 import com.grupo2.sistemadegestionveterinaria.vista.VistaLogin;
 import javax.swing.SwingUtilities;
 
-public class SistemaDeGestionVeterinaria {
+/**
+ * Clase principal que inicializa y coordina la ejecución del sistema de gestión
+ * veterinaria.
+ *
+ * @author Grupo 2
+ * @version 1.0
+ */
+public final class SistemaDeGestionVeterinaria {
 
-    public static void main(String[] args) {
-        // Ejecución segura de la interfaz gráfica apuntando al flujo del Login
+    /**
+     * Constructor privado para evitar instanciación.
+     */
+    private SistemaDeGestionVeterinaria() {
+        throw new UnsupportedOperationException(
+                "Esta clase no debe ser instanciada.");
+    }
+
+    /**
+     * Punto de entrada principal de la aplicación. Configura e inicia la
+     * interfaz gráfica de usuario para el inicio de sesión.
+     *
+     * @param args los argumentos de la línea de comandos (no utilizados).
+     */
+    public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
-            // 1. Instanciamos el Modelo y la Vista del Módulo 0
             VistaLogin vistaLogin = new VistaLogin();
             ModeloUsuario modeloUsuario = new ModeloUsuario();
-            
-            // 2. Acoplamos los componentes mediante el Controlador oficial
-            ControladorUsuario controlador = new ControladorUsuario(modeloUsuario, vistaLogin);
-
-            // 3. Desplegamos la ventana de acceso
+            @SuppressWarnings("unused")
+            ControladorUsuario controlador = new ControladorUsuario(
+                    modeloUsuario, vistaLogin);
             vistaLogin.setVisible(true);
         });
     }

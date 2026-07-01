@@ -9,8 +9,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
+ * Clase que gestiona la conexión con la base de datos MySQL del sistema.
+ * Proporciona el punto de acceso centralizado para establecer conexiones.
  *
  * @author Galo Izquierdo
+ * @version 1.0
  */
 public class CnnDB {
 
@@ -26,6 +29,13 @@ public class CnnDB {
   // Construcción de la URL de conexión para MySQL
   private static final String URL = "jdbc:mysql://" + HOST + ":" + PUERTO + "/" + BASE_DATOS;
 
+  /**
+   * Establece y devuelve una conexión activa con la base de datos.
+   *
+   * @return un objeto Connection a la base de datos MySQL.
+   * @throws SQLException si ocurre un error al intentar establecer la
+   *                      conexión.
+   */
   public static Connection getConeccion() throws SQLException {
     Connection con = DriverManager.getConnection(URL, USER, PASS);
     System.out.println("¡Conexión exitosa al servidor y a la base de datos: " + BASE_DATOS + "!");

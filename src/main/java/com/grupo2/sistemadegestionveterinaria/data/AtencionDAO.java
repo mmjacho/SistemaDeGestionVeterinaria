@@ -85,7 +85,8 @@ public class AtencionDAO {
     }
 
     /**
-     * Verifica la existencia de una cita médica en la tabla de agenda global.
+     * Verifica la existencia de una cita médica en la tabla de agenda
+     * global.
      *
      * @param pIdCita Identificador único de la cita.
      * @return true si el registro existe, false de lo contrario.

@@ -6,14 +6,26 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
+ * Diálogo modal para la selección de un cliente registrado.
+ * Presenta una lista de clientes en formato tabular y permite
+ * recuperar el objeto ModeloCliente seleccionado por el usuario.
  *
  * @author Galo Izquierdo
+ * @version 1.0
  */
 public class DlgSeleccionarCliente extends javax.swing.JDialog {
 
     private ModeloCliente clienteSeleccionado = null;
     private final DbDAOMod1 dao = new DbDAOMod1();
 
+    /**
+     * Constructor de DlgSeleccionarCliente.
+     * Inicializa los componentes de la interfaz de usuario y carga
+     * la tabla con los clientes disponibles.
+     *
+     * @param parent la ventana principal o marco padre.
+     * @param modal determina si el diálogo bloquea otras ventanas.
+     */
     public DlgSeleccionarCliente(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -47,6 +59,12 @@ public class DlgSeleccionarCliente extends javax.swing.JDialog {
         }
     }
 
+    /**
+     * Obtiene el cliente seleccionado por el usuario.
+     *
+     * @return el modelo de datos del cliente seleccionado, o null si
+     *         no se seleccionó ninguno.
+     */
     public ModeloCliente getClienteSeleccionado() {
         return clienteSeleccionado;
     }
@@ -127,7 +145,9 @@ public class DlgSeleccionarCliente extends javax.swing.JDialog {
     }//GEN-LAST:event_btnokActionPerformed
 
     /**
-     * @param args the command line arguments
+     * Método principal para la ejecución independiente del diálogo.
+     *
+     * @param args los argumentos de la línea de comandos.
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
