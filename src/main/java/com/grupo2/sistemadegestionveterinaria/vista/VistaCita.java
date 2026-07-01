@@ -18,7 +18,7 @@ public class VistaCita extends JFrame {
     public VistaCita() {
         setTitle("Módulo Integrado: Gestión e Historial de Citas Veterinarias");
         setSize(900, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));

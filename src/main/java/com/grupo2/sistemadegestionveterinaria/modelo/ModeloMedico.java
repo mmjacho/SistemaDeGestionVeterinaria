@@ -21,9 +21,6 @@ public class ModeloMedico {
     private String telefono;
     private boolean estado;
 
-    // CONEXIÓN
-    Connection con;
-
     //-----------------------------------------
     // CONSTRUCTOR
     //-----------------------------------------
@@ -88,238 +85,139 @@ public class ModeloMedico {
     // MÉTODO GUARDAR
     //-----------------------------------------
     public boolean guardarMedico() {
-
         String sql = "INSERT INTO g2_vet_medicos "
         + "(nombres, apellidos, especialidad, telefono, estado) "
         + "VALUES (?, ?, ?, ?, ?)";
 
-        try {
+        try (Connection con = CnnDB.getConeccion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-    con = CnnDB.getConeccion();
+            ps.setString(1, nombres);
+            ps.setString(2, apellidos);
+            ps.setString(3, especialidad);
+            ps.setString(4, telefono);
+            ps.setBoolean(5, estado);
 
-    PreparedStatement ps =
-            con.prepareStatement(sql);
+            ps.executeUpdate();
+            return true;
 
-    ps.setString(1, nombres);
-    ps.setString(2, apellidos);
-    ps.setString(3, especialidad);
-    ps.setString(4, telefono);
-    ps.setBoolean(5, estado);
-
-    ps.executeUpdate();
-
-    return true;
-
-} catch (Exception e) {
-
-    e.printStackTrace();
-
-    return false;
-}
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
+
     //-----------------------------------------
     // MÉTODO LISTAR
     //-----------------------------------------
     public ArrayList<ModeloMedico> listarMedicos() {
-
-        ArrayList<ModeloMedico> lista =
-                new ArrayList<>();
-
+        ArrayList<ModeloMedico> lista = new ArrayList<>();
         String sql = "SELECT * FROM g2_vet_medicos WHERE estado = true ORDER BY apellidos";
 
-        try {
-
-            con = CnnDB.getConeccion();
-
-            PreparedStatement ps =
-                    con.prepareStatement(sql);
-
-            ResultSet rs = ps.executeQuery();
+        try (Connection con = CnnDB.getConeccion();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-
-                ModeloMedico m =
-                        new ModeloMedico();
-
-                m.setIdMedico(
-                        rs.getInt("id_medico")
-                );
-
-                m.setNombres(
-                        rs.getString("nombres")
-                );
-
-                m.setApellidos(
-                        rs.getString("apellidos")
-                );
-
-                m.setEspecialidad(
-                        rs.getString("especialidad")
-                );
-
-                m.setTelefono(
-                        rs.getString("telefono")
-                );
-
-                m.setEstado(
-                        rs.getBoolean("estado")
-                );
-
+                ModeloMedico m = new ModeloMedico();
+                m.setIdMedico(rs.getInt("id_medico"));
+                m.setNombres(rs.getString("nombres"));
+                m.setApellidos(rs.getString("apellidos"));
+                m.setEspecialidad(rs.getString("especialidad"));
+                m.setTelefono(rs.getString("telefono"));
+                m.setEstado(rs.getBoolean("estado"));
                 lista.add(m);
             }
 
         } catch (Exception e) {
-
-            System.out.println(
-                    "Error listar medicos: "
-                    + e.getMessage()
-            );
+            System.err.println("Error listar medicos: " + e.getMessage());
         }
 
         return lista;
     }
+
     //-----------------------------------------
-// MÉTODO ACTUALIZAR
-//-----------------------------------------
-public boolean actualizarMedico() {
+    // MÉTODO ACTUALIZAR
+    //-----------------------------------------
+    public boolean actualizarMedico() {
+        String sql = "UPDATE g2_vet_medicos "
+                + "SET nombres=?, "
+                + "apellidos=?, "
+                + "especialidad=?, "
+                + "telefono=?, "
+                + "estado=? "
+                + "WHERE id_medico=?";
 
-    String sql =
-            "UPDATE g2_vet_medicos "
-            + "SET nombres=?, "
-            + "apellidos=?, "
-            + "especialidad=?, "
-            + "telefono=?, "
-            + "estado=? "
-            + "WHERE id_medico=?";
+        try (Connection con = CnnDB.getConeccion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-    try {
+            ps.setString(1, nombres);
+            ps.setString(2, apellidos);
+            ps.setString(3, especialidad);
+            ps.setString(4, telefono);
+            ps.setBoolean(5, estado);
+            ps.setInt(6, idMedico);
 
-        con = CnnDB.getConeccion();
+            ps.executeUpdate();
+            return true;
 
-        PreparedStatement ps =
-                con.prepareStatement(sql);
-
-        ps.setString(1, nombres);
-        ps.setString(2, apellidos);
-        ps.setString(3, especialidad);
-        ps.setString(4, telefono);
-        ps.setBoolean(5, estado);
-
-        ps.setInt(6, idMedico);
-
-        ps.executeUpdate();
-
-        return true;
-
-    } catch (Exception e) {
-
-        e.printStackTrace();
-
-        return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
-//-----------------------------------------
-// MÉTODO ELIMINAR
-//-----------------------------------------
-public boolean eliminarMedico() {
 
-    String sql =
-            "UPDATE g2_vet_medicos "
-            + "SET estado=false "
-            + "WHERE id_medico=?";
+    //-----------------------------------------
+    // MÉTODO ELIMINAR
+    //-----------------------------------------
+    public boolean eliminarMedico() {
+        String sql = "UPDATE g2_vet_medicos SET estado=false WHERE id_medico=?";
 
-    try {
+        try (Connection con = CnnDB.getConeccion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-        con = CnnDB.getConeccion();
+            ps.setInt(1, idMedico);
+            ps.executeUpdate();
+            return true;
 
-        PreparedStatement ps =
-                con.prepareStatement(sql);
-
-        ps.setInt(1, idMedico);
-
-        ps.executeUpdate();
-
-        return true;
-
-    } catch (Exception e) {
-
-        e.printStackTrace();
-
-        return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
-//-----------------------------------------
-// MÉTODO BUSCAR
-//-----------------------------------------
-public ArrayList<ModeloMedico> buscarMedico(
-        String textoBuscar
-) {
 
-    ArrayList<ModeloMedico> lista =
-            new ArrayList<>();
+    //-----------------------------------------
+    // MÉTODO BUSCAR
+    //-----------------------------------------
+    public ArrayList<ModeloMedico> buscarMedico(String textoBuscar) {
+        ArrayList<ModeloMedico> lista = new ArrayList<>();
+        String sql = "SELECT * FROM g2_vet_medicos "
+                + "WHERE nombres LIKE ? "
+                + "OR apellidos LIKE ?";
 
-    String sql =
-            "SELECT * FROM g2_vet_medicos "
-            + "WHERE nombres LIKE ? "
-            + "OR apellidos LIKE ?";
+        try (Connection con = CnnDB.getConeccion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-    try {
+            ps.setString(1, "%" + textoBuscar + "%");
+            ps.setString(2, "%" + textoBuscar + "%");
 
-        con = CnnDB.getConeccion();
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ModeloMedico m = new ModeloMedico();
+                    m.setIdMedico(rs.getInt("id_medico"));
+                    m.setNombres(rs.getString("nombres"));
+                    m.setApellidos(rs.getString("apellidos"));
+                    m.setEspecialidad(rs.getString("especialidad"));
+                    m.setTelefono(rs.getString("telefono"));
+                    m.setEstado(rs.getBoolean("estado"));
+                    lista.add(m);
+                }
+            }
 
-        PreparedStatement ps =
-                con.prepareStatement(sql);
-
-        ps.setString(
-                1,
-                "%" + textoBuscar + "%"
-        );
-
-        ps.setString(
-                2,
-                "%" + textoBuscar + "%"
-        );
-
-        ResultSet rs =
-                ps.executeQuery();
-
-        while (rs.next()) {
-
-            ModeloMedico m =
-                    new ModeloMedico();
-
-            m.setIdMedico(
-                    rs.getInt("id_medico")
-            );
-
-            m.setNombres(
-                    rs.getString("nombres")
-            );
-
-            m.setApellidos(
-                    rs.getString("apellidos")
-            );
-
-            m.setEspecialidad(
-                    rs.getString("especialidad")
-            );
-
-            m.setTelefono(
-                    rs.getString("telefono")
-            );
-            
-            m.setEstado(
-            rs.getBoolean("estado")
-            );
-
-            lista.add(m);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-    } catch (Exception e) {
-
-        e.printStackTrace();
+        return lista;
     }
-
-    return lista;
-}
 }

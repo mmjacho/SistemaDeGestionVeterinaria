@@ -26,15 +26,9 @@ public class CnnDB {
   // Construcción de la URL de conexión para MySQL
   private static final String URL = "jdbc:mysql://" + HOST + ":" + PUERTO + "/" + BASE_DATOS;
 
-  public static Connection getConeccion() throws Exception {
-    Connection con = null;
-    try {
-      // Se establece la conexión con la base de datos
-      con = DriverManager.getConnection(URL, USER, PASS);
-      System.out.println("¡Conexión exitosa al servidor y a la base de datos: " + BASE_DATOS + "!");
-    } catch (SQLException e) {
-      System.err.println("Error crítico de conexión a la BD: " + e.getMessage());
-    }
+  public static Connection getConeccion() throws SQLException {
+    Connection con = DriverManager.getConnection(URL, USER, PASS);
+    System.out.println("¡Conexión exitosa al servidor y a la base de datos: " + BASE_DATOS + "!");
     return con;
   }
 }

@@ -216,7 +216,7 @@ public class VistaAtencion extends JFrame {
         setTitle("Módulo: Registro de Atención Veterinaria");
         setSize(ANCHO_VENTANA, ALTO_VENTANA);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel panelPrincipal = new JPanel(
                 new BorderLayout(GAP_H_PRINCIPAL, GAP_V_PRINCIPAL)

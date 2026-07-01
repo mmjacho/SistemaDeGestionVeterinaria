@@ -29,7 +29,7 @@ public class VentanaFacturacion extends javax.swing.JFrame {
   }
 
   private void initComponentsManual() {
-    setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+    setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     setResizable(false);
 
     // Panel Principal con Margen

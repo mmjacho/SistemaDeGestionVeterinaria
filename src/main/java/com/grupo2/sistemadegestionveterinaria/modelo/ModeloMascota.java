@@ -129,11 +129,9 @@ public class ModeloMascota {
   public ArrayList<ModeloMascota> listarMascotas() {
     ArrayList<ModeloMascota> lista = new ArrayList<>();
     String sql = "SELECT * FROM g2_vet_mascotas";
-    Connection con = null;
-    try {
-      con = CnnDB.getConeccion();
-      PreparedStatement ps = con.prepareStatement(sql);
-      ResultSet rs = ps.executeQuery();
+    try (Connection con = CnnDB.getConeccion();
+         PreparedStatement ps = con.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
       while (rs.next()) {
         ModeloMascota mascota = new ModeloMascota();
         mascota.setId(rs.getInt("id_mascota"));
@@ -145,7 +143,7 @@ public class ModeloMascota {
         lista.add(mascota);
       }
     } catch (Exception e) {
-      System.out.println("Error al listar mascotas: " + e.getMessage());
+      System.err.println("Error al listar mascotas: " + e.getMessage());
     }
     return lista;
   }
