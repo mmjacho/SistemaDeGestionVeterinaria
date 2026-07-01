@@ -93,6 +93,7 @@ public class VistaMenuPrincipal extends JFrame {
     btnModuloCita.addActionListener(e -> {
       setVisible(false);
       VistaCita vista = new VistaCita();
+      ControladorCita controlador = new ControladorCita(vista);
       vista.addWindowListener(new java.awt.event.WindowAdapter() {
         @Override
         public void windowClosing(java.awt.event.WindowEvent e) {

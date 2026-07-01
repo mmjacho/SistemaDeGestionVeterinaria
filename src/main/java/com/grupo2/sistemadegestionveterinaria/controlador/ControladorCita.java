@@ -26,7 +26,6 @@ public class ControladorCita {
 
     private final VistaCita vista;
     private final CitaDAO dao;
-    private final ModeloCita modelo;
     private final ArrayList<ModeloCita> citasActuales;
 
     /**
@@ -39,7 +38,6 @@ public class ControladorCita {
     public ControladorCita(final VistaCita v) {
         this.vista = v; // Ya no hay conflicto de nombres
         this.dao = new CitaDAO();
-        this.modelo = new ModeloCita();
         this.citasActuales = new ArrayList<>();
 
         iniciarEventos();
@@ -64,12 +62,40 @@ public class ControladorCita {
 
     private void configurarSeleccionTabla() {
         vista.tablaCitas.getSelectionModel().addListSelectionListener(e -> {
-            int fila = vista.tablaCitas.getSelectedRow();
-            if (fila != -1) {
-                vista.txtFecha.setText(vista.tablaCitas.getValueAt(
-                        fila, 3).toString());
-                vista.txtHora.setText(vista.tablaCitas.getValueAt(
-                        fila, 4).toString());
+            if (!e.getValueIsAdjusting()) {
+                int fila = vista.tablaCitas.getSelectedRow();
+                if (fila != -1) {
+                    vista.txtFecha.setText(vista.tablaCitas.getValueAt(
+                            fila, 3).toString());
+                    vista.txtHora.setText(vista.tablaCitas.getValueAt(
+                            fila, 4).toString());
+
+                    // Seleccionar médico correspondiente en el combobox
+                    Object medicoIdObj = vista.tablaCitas.getValueAt(fila, 1);
+                    if (medicoIdObj != null) {
+                        String medicoIdStr = medicoIdObj.toString();
+                        for (int i = 0; i < vista.cbxMedico.getItemCount(); i++) {
+                            String item = vista.cbxMedico.getItemAt(i);
+                            if (item.startsWith(medicoIdStr + " - ")) {
+                                vista.cbxMedico.setSelectedIndex(i);
+                                break;
+                            }
+                        }
+                    }
+
+                    // Seleccionar mascota correspondiente en el combobox
+                    Object mascotaIdObj = vista.tablaCitas.getValueAt(fila, 2);
+                    if (mascotaIdObj != null) {
+                        String mascotaIdStr = mascotaIdObj.toString();
+                        for (int i = 0; i < vista.cbxMascota.getItemCount(); i++) {
+                            String item = vista.cbxMascota.getItemAt(i);
+                            if (item.startsWith(mascotaIdStr + " - ")) {
+                                vista.cbxMascota.setSelectedIndex(i);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         });
     }
@@ -156,13 +182,9 @@ public class ControladorCita {
                 return;
             }
 
-            modelo.setMedicoId(medicoId);
-            modelo.setMascotaId(mascotaId);
-            modelo.setFecha(fechaMySQL);
-            modelo.setHora(hora);
-            modelo.setEstado("PROGRAMADA");
+            ModeloCita nuevaCita = new ModeloCita(medicoId, mascotaId, fechaMySQL, hora, "PROGRAMADA");
 
-            if (dao.guardarCita(modelo)) {
+            if (dao.guardarCita(nuevaCita)) {
                 JOptionPane.showMessageDialog(
                         vista, "Cita agendada exitosamente");
                 limpiarCampos();
@@ -201,14 +223,18 @@ public class ControladorCita {
                     mascotaSeleccionada.split(" - ")[0]);
             String fechaMySQL = convertirAFechaMySQL(fecha);
 
-            modelo.setId(idCita);
-            modelo.setMedicoId(medicoId);
-            modelo.setMascotaId(mascotaId);
-            modelo.setFecha(fechaMySQL);
-            modelo.setHora(hora);
-            modelo.setEstado("REPROGRAMADA");
+            // Verificar disponibilidad antes de reprogramar
+            if (!dao.verificarDisponibilidadMedico(medicoId, fechaMySQL, hora, idCita)
+                    || !dao.verificarDisponibilidadMascota(mascotaId, fechaMySQL, hora, idCita)) {
+                JOptionPane.showMessageDialog(
+                        vista, "Conflicto de agenda: El médico o la mascota ya se encuentran ocupados.");
+                return;
+            }
 
-            if (dao.actualizarCita(modelo)) {
+            ModeloCita citaActualizada = new ModeloCita(medicoId, mascotaId, fechaMySQL, hora, "REPROGRAMADA");
+            citaActualizada.setId(idCita);
+
+            if (dao.actualizarCita(citaActualizada)) {
                 JOptionPane.showMessageDialog(
                         vista, "Cita reprogramada exitosamente");
                 limpiarCampos();
@@ -236,6 +262,9 @@ public class ControladorCita {
                 JOptionPane.showMessageDialog(
                         vista, "Cita marcada como cancelada");
                 cargarCitas();
+            } else {
+                JOptionPane.showMessageDialog(
+                        vista, "Error al cancelar la cita");
             }
         }
     }
@@ -340,6 +369,10 @@ public class ControladorCita {
 
     // Auxiliar de conversión de formatos de fecha
     private String convertirAFechaMySQL(String fechaOrigen) throws Exception {
+        if (fechaOrigen.contains("-")) {
+            // Si ya contiene guiones, asumimos que está en formato YYYY-MM-DD
+            return fechaOrigen;
+        }
         String[] partes = fechaOrigen.split("/");
         return partes[2] + "-" + partes[1] + "-" + partes[0];
     }
