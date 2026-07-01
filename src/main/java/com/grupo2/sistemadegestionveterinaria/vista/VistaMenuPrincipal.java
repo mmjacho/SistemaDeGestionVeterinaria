@@ -11,6 +11,8 @@ import com.grupo2.sistemadegestionveterinaria.controlador.ControladorMedico;
 import com.grupo2.sistemadegestionveterinaria.modelo.ModeloAtencion;       // Importado para el MVC
 import com.grupo2.sistemadegestionveterinaria.controlador.ControladorAtencion; // Importado para el MVC
 import com.grupo2.sistemadegestionveterinaria.controlador.ControladorCita;
+import com.grupo2.sistemadegestionveterinaria.controlador.FacturaControlador;
+import com.grupo2.sistemadegestionveterinaria.data.FacturaDAO;
 
 /**
  * Ventana gráfica que actúa como menú principal y panel de control.
@@ -127,6 +129,8 @@ public class VistaMenuPrincipal extends JFrame {
     btnModuloFactura.addActionListener(e -> {
       setVisible(false);
       VentanaFacturacion vista = new VentanaFacturacion();
+      FacturaDAO dao = new FacturaDAO();
+      FacturaControlador controlador = new FacturaControlador(vista, dao);
       vista.addWindowListener(new java.awt.event.WindowAdapter() {
         @Override
         public void windowClosing(java.awt.event.WindowEvent e) {
