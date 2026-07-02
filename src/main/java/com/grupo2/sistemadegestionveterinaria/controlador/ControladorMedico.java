@@ -535,8 +535,17 @@ public void buscarMedico() {
     //-------------------------------------
     // TEXTO DE BÚSQUEDA
     //-------------------------------------
-    String textoBuscar =
-            vista.txtNombres.getText();
+    String textoBuscar = "";
+
+if (!vista.txtNombres.getText().trim().isEmpty()) {
+
+    textoBuscar = vista.txtNombres.getText().trim();
+
+} else if (!vista.txtApellidos.getText().trim().isEmpty()) {
+
+    textoBuscar = vista.txtApellidos.getText().trim();
+
+}
 
     //-------------------------------------
     // COLUMNAS TABLA
