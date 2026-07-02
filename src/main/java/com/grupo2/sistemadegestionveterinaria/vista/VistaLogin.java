@@ -73,6 +73,7 @@ public class VistaLogin extends JFrame {
             String password = new String(txtPassword.getPassword());
 
             if (usuario.equals("admin") && password.equals("123")) {
+                com.grupo2.sistemadegestionveterinaria.modelo.ModeloUsuario.setUsuarioLogueado(usuario);
                 JOptionPane.showMessageDialog(this, "¡Bienvenido al sistema!");
                 new VistaMenuPrincipal().setVisible(true);
                 this.dispose(); 

@@ -19,6 +19,11 @@ public class ModeloUsuario {
     private String rol;
 
     /**
+     * Almacena el nombre del usuario actualmente autenticado en el sistema.
+     */
+    private static String usuarioLogueado = "Administrador";
+
+    /**
      * Constructor por defecto de ModeloUsuario.
      * Crea una instancia vacía del usuario.
      */
@@ -80,4 +85,22 @@ public class ModeloUsuario {
      * @param rol el rol a asignar.
      */
     public void setRol(String rol) { this.rol = rol; }
+
+    /**
+     * Obtiene el nombre del usuario actualmente autenticado en el sistema.
+     *
+     * @return el nombre del usuario logueado.
+     */
+    public static String getUsuarioLogueado() {
+        return usuarioLogueado;
+    }
+
+    /**
+     * Establece el nombre del usuario actualmente autenticado en el sistema.
+     *
+     * @param usuario el nombre de usuario.
+     */
+    public static void setUsuarioLogueado(String usuario) {
+        usuarioLogueado = usuario;
+    }
 }

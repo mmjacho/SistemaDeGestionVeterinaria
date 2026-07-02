@@ -42,6 +42,11 @@ public class ModeloAtencion {
     private String receta;
 
     /**
+     * Nombre del médico asignado a la cita de esta atención.
+     */
+    private String nombreMedico;
+
+    /**
      * Constructor por defecto de la clase ModeloAtencion. Crea una instancia
      * vacía sin inicializar sus atributos.
      */
@@ -154,5 +159,23 @@ public class ModeloAtencion {
      */
     public final void setReceta(final String nuevaReceta) {
         this.receta = nuevaReceta;
+    }
+
+    /**
+     * Obtiene el nombre del médico asignado.
+     *
+     * @return El nombre del médico.
+     */
+    public final String getNombreMedico() {
+        return nombreMedico;
+    }
+
+    /**
+     * Establece el nombre del médico asignado.
+     *
+     * @param nuevoNombreMedico El nombre del médico a establecer.
+     */
+    public final void setNombreMedico(final String nuevoNombreMedico) {
+        this.nombreMedico = nuevoNombreMedico;
     }
 }

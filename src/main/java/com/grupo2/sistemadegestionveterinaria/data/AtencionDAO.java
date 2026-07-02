@@ -158,8 +158,10 @@ public class AtencionDAO {
     public final List<ModeloAtencion> obtenerHistorialPorMascota(
             final int pIdMascota) {
         List<ModeloAtencion> historial = new ArrayList<>();
-        String sql = "SELECT a.* FROM g2_vet_atenciones a "
+        String sql = "SELECT a.*, CONCAT(m.nombres, ' ', m.apellidos) AS medico "
+                + "FROM g2_vet_atenciones a "
                 + "JOIN g2_vet_citas c ON a.id_cita = c.id_cita "
+                + "JOIN g2_vet_medicos m ON c.medico_id = m.id_medico "
                 + "WHERE c.mascota_id = ?";
 
         try (Connection con = CnnDB.getConeccion();
@@ -175,6 +177,7 @@ public class AtencionDAO {
                     atencion.setPesoActual(rs.getDouble("peso_actual"));
                     atencion.setDiagnostico(rs.getString("diagnostico"));
                     atencion.setReceta(rs.getString("receta"));
+                    atencion.setNombreMedico(rs.getString("medico"));
                     historial.add(atencion);
                 }
             }
@@ -266,5 +269,154 @@ public class AtencionDAO {
             System.err.println("Error al buscar mascota: " + e.getMessage());
         }
         return ID_NO_ENCONTRADO;
+    }
+
+    /**
+     * Obtiene una lista de los identificadores de citas médicas que
+     * tienen el estado "PROGRAMADA" o "REPROGRAMADA".
+     *
+     * @return Lista de IDs de citas.
+     */
+    public final List<Integer> obtenerCitasActivas() {
+        List<Integer> citas = new ArrayList<>();
+        String sql = "SELECT id_cita FROM g2_vet_citas WHERE estado IN ('PROGRAMADA', 'REPROGRAMADA') ORDER BY id_cita ASC";
+        try (Connection con = CnnDB.getConeccion();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                citas.add(rs.getInt("id_cita"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al obtener citas activas: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error de conexión: " + e.getMessage());
+        }
+        return citas;
+    }
+
+    /**
+     * Actualiza el estado de una cita médica en la tabla g2_vet_citas.
+     *
+     * @param pIdCita      Identificador único de la cita.
+     * @param pNuevoEstado El nuevo estado (ej. "ATENDIDA").
+     * @return true si se actualizó con éxito, false en caso contrario.
+     */
+    public final boolean actualizarEstadoCita(final int pIdCita, final String pNuevoEstado) {
+        String sql = "UPDATE g2_vet_citas SET estado = ? WHERE id_cita = ?";
+        try (Connection con = CnnDB.getConeccion();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, pNuevoEstado);
+            ps.setInt(2, pIdCita);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error SQL al actualizar estado de la cita: " + e.getMessage());
+            return false;
+        } catch (Exception e) {
+            System.err.println("Error de conexión: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Busca una cita médica activa (PROGRAMADA o REPROGRAMADA) para la mascota dada.
+     *
+     * @param idMascota Identificador de la mascota.
+     * @return El ID de la cita, o -1 si no se encuentra ninguna cita activa.
+     */
+    public final int obtenerCitaActivaPorMascota(final int idMascota) {
+        String sql = "SELECT id_cita FROM g2_vet_citas WHERE mascota_id = ? AND estado IN ('PROGRAMADA', 'REPROGRAMADA') ORDER BY id_cita DESC LIMIT 1";
+        try (Connection con = CnnDB.getConeccion();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idMascota);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id_cita");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al obtener cita activa por mascota: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error de conexión: " + e.getMessage());
+        }
+        return -1;
+    }
+
+    /**
+     * Obtiene todos los clientes registrados.
+     *
+     * @return Lista de mapas con ID y nombre del cliente.
+     */
+    public final List<Map<String, String>> obtenerClientes() {
+        List<Map<String, String>> clientes = new ArrayList<>();
+        String sql = "SELECT id_cliente, nombres FROM g2_vet_clientes ORDER BY nombres ASC";
+        try (Connection con = CnnDB.getConeccion();
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Map<String, String> c = new HashMap<>();
+                c.put("id", String.valueOf(rs.getInt("id_cliente")));
+                c.put("nombre", rs.getString("nombres"));
+                clientes.add(c);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al obtener clientes: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error de conexión: " + e.getMessage());
+        }
+        return clientes;
+    }
+
+    /**
+     * Obtiene las mascotas asociadas a un cliente.
+     *
+     * @param idCliente Identificador del cliente.
+     * @return Lista de mapas con ID y nombre de la mascota.
+     */
+    public final List<Map<String, String>> obtenerMascotasPorCliente(int idCliente) {
+        List<Map<String, String>> mascotas = new ArrayList<>();
+        String sql = "SELECT id_mascota, nombre FROM g2_vet_mascotas WHERE id_cliente = ? AND estado = 0 ORDER BY nombre ASC";
+        try (Connection con = CnnDB.getConeccion();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idCliente);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Map<String, String> m = new HashMap<>();
+                    m.put("id", String.valueOf(rs.getInt("id_mascota")));
+                    m.put("nombre", rs.getString("nombre"));
+                    mascotas.add(m);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al obtener mascotas: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error de conexión: " + e.getMessage());
+        }
+        return mascotas;
+    }
+
+    /**
+     * Obtiene el ID de la mascota y el ID del dueño (cliente) para una cita dada.
+     *
+     * @param idCita Identificador único de la cita.
+     * @return Un mapa con "mascota_id" y "cliente_id", o mapa vacío si no existe.
+     */
+    public final Map<String, Integer> obtenerMascotaYClientePorCita(int idCita) {
+        Map<String, Integer> res = new HashMap<>();
+        String sql = "SELECT c.mascota_id, m.id_cliente FROM g2_vet_citas c JOIN g2_vet_mascotas m ON c.mascota_id = m.id_mascota WHERE c.id_cita = ?";
+        try (Connection con = CnnDB.getConeccion();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idCita);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    res.put("mascota_id", rs.getInt("mascota_id"));
+                    res.put("cliente_id", rs.getInt("id_cliente"));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error SQL al obtener mascota y cliente de cita: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error de conexión: " + e.getMessage());
+        }
+        return res;
     }
 }

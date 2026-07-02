@@ -1,6 +1,7 @@
 package com.grupo2.sistemadegestionveterinaria.vista;
 
 import javax.swing.JFrame;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
@@ -110,6 +111,21 @@ public class VistaAtencion extends JFrame {
 
     /** Componente de color Azul (B) para el botón generar reporte. */
     private static final int VERDE_B = 102;
+
+    /**
+     * Selector de citas médicas activas (PROGRAMADA y REPROGRAMADA).
+     */
+    private final JComboBox<String> cbxIdCita;
+
+    /**
+     * Selector para el dueño de la mascota (cliente).
+     */
+    private final JComboBox<ComboItem> cbxDueno;
+
+    /**
+     * Selector para las mascotas asociadas al dueño seleccionado.
+     */
+    private final JComboBox<ComboItem> cbxMascota;
 
     /**
      * Campo de texto para ingresar o mostrar el identificador
@@ -227,18 +243,31 @@ public class VistaAtencion extends JFrame {
         );
 
         // Búsqueda de Cita y Filtro
-        JPanel panelNorte = new JPanel(
-                new FlowLayout(FlowLayout.LEFT, GAP_H_NORTE, 0)
-        );
-        panelNorte.add(new JLabel("ID de Cita Médica:"));
-        txtIdCita = new JTextField(COL_ID_CITA);
-        panelNorte.add(txtIdCita);
-        btnBuscarHistorial = new JButton("Cargar Cita / Historial");
-        panelNorte.add(btnBuscarHistorial);
+        JPanel panelNorte = new JPanel(new GridLayout(2, 1, 0, 5));
 
-        panelNorte.add(new JLabel("Filtrar por Diagnóstico:"));
+        JPanel fila1 = new JPanel(new FlowLayout(FlowLayout.LEFT, GAP_H_NORTE, 0));
+        fila1.add(new JLabel("Seleccionar Cita:"));
+        cbxIdCita = new JComboBox<>();
+        fila1.add(cbxIdCita);
+        fila1.add(new JLabel("Dueño:"));
+        cbxDueno = new JComboBox<>();
+        fila1.add(cbxDueno);
+        fila1.add(new JLabel("Filtrar por Diagnóstico:"));
         txtFiltroDiagnostico = new JTextField(COL_FILTRO);
-        panelNorte.add(txtFiltroDiagnostico);
+        fila1.add(txtFiltroDiagnostico);
+
+        JPanel fila2 = new JPanel(new FlowLayout(FlowLayout.LEFT, GAP_H_NORTE, 0));
+        fila2.add(new JLabel("Mascota:"));
+        cbxMascota = new JComboBox<>();
+        fila2.add(cbxMascota);
+        btnBuscarHistorial = new JButton("Cargar Historial");
+        fila2.add(btnBuscarHistorial);
+
+        panelNorte.add(fila1);
+        panelNorte.add(fila2);
+
+        // Instanciamos txtIdCita para mantener compatibilidad con los tests pero no lo agregamos a los paneles
+        txtIdCita = new JTextField(COL_ID_CITA);
 
         // Panel de Información Dinámica Cruzada de la Cita
         JPanel panelInfoCita = new JPanel(
@@ -318,11 +347,11 @@ public class VistaAtencion extends JFrame {
         panelBotones.add(btnEliminar);
         panelBotones.add(btnGenerarReporte);
 
-        // Estructura limpia de 5 columnas para la tabla
+        // Estructura limpia de 6 columnas para la tabla
         modeloTablaDef = new DefaultTableModel(
                 new Object[][]{},
                 new String[]{"ID Atención", "Diagnóstico", "Receta",
-                    "Temp", "Peso"}
+                    "Temp", "Peso", "Médico"}
         );
         tablaHistorial = new JTable(modeloTablaDef);
 
@@ -461,5 +490,55 @@ public class VistaAtencion extends JFrame {
      */
     public final JLabel getLblNombreMedico() {
         return lblNombreMedico;
+    }
+
+    /**
+     * Obtiene el selector de citas médicas.
+     * @return El combo box cbxIdCita.
+     */
+    public final JComboBox<String> getCbxIdCita() {
+        return cbxIdCita;
+    }
+
+    /**
+     * Obtiene el selector de dueños (clientes).
+     * @return El combo box cbxDueno.
+     */
+    public final JComboBox<ComboItem> getCbxDueno() {
+        return cbxDueno;
+    }
+
+    /**
+     * Obtiene el selector de mascotas.
+     * @return El combo box cbxMascota.
+     */
+    public final JComboBox<ComboItem> getCbxMascota() {
+        return cbxMascota;
+    }
+
+    /**
+     * Clase auxiliar para modelar ítems clave-valor en los JComboBox.
+     */
+    public static class ComboItem {
+        private final int id;
+        private final String texto;
+
+        public ComboItem(int id, String texto) {
+            this.id = id;
+            this.texto = texto;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getTexto() {
+            return texto;
+        }
+
+        @Override
+        public String toString() {
+            return texto;
+        }
     }
 }
