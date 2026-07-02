@@ -121,4 +121,69 @@ public class ControladorAtencionTest {
             Integer.parseInt(vista.getTxtIdCita().getText());
         }, "El controlador debe capturar la excepción al buscar con letras.");
     }
+
+    /**
+     * Valida que el método eliminarAtencion de AtencionDAO realice una
+     * baja lógica (UPDATE de estado a 'ANULADO') en lugar de una baja física.
+     */
+    @Test
+    public final void testEliminarAtencion_SoftDelete() {
+        com.grupo2.sistemadegestionveterinaria.data.AtencionDAO atencionDAO = new com.grupo2.sistemadegestionveterinaria.data.AtencionDAO();
+        int idCitaTest = -1;
+        int idAtencionTest = -1;
+
+        try (java.sql.Connection con = com.grupo2.sistemadegestionveterinaria.data.CnnDB.getConeccion()) {
+            // 1. Obtener una cita existente para evitar fallar por clave foránea
+            try (java.sql.PreparedStatement psCita = con.prepareStatement("SELECT id_cita FROM g2_vet_citas LIMIT 1");
+                 java.sql.ResultSet rsCita = psCita.executeQuery()) {
+                if (rsCita.next()) {
+                    idCitaTest = rsCita.getInt("id_cita");
+                }
+            }
+
+            if (idCitaTest == -1) {
+                System.out.println("No se encontró ninguna cita en la base de datos para la prueba.");
+                return;
+            }
+
+            // 2. Insertar una atención temporal para la prueba
+            String sqlInsert = "INSERT INTO g2_vet_atenciones (id_cita, temperatura, peso_actual, diagnostico, receta, estado) VALUES (?, 38.5, 10.0, 'Diagnóstico de prueba soft delete', 'Receta de prueba', 'ACTIVO')";
+            try (java.sql.PreparedStatement psInsert = con.prepareStatement(sqlInsert, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+                psInsert.setInt(1, idCitaTest);
+                psInsert.executeUpdate();
+                try (java.sql.ResultSet generatedKeys = psInsert.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        idAtencionTest = generatedKeys.getInt(1);
+                    }
+                }
+            }
+
+            assertTrue(idAtencionTest > 0, "Se debe haber insertado la atención de prueba.");
+
+            // 3. Ejecutar la anulación lógica mediante eliminarAtencion
+            boolean anuladoOk = atencionDAO.eliminarAtencion(idAtencionTest);
+            assertTrue(anuladoOk, "La eliminación/anulación debe retornar verdadero.");
+
+            // 4. Comprobar que el registro sigue existiendo físicamente (no DELETE) y que su estado es 'ANULADO'
+            String sqlSelect = "SELECT estado FROM g2_vet_atenciones WHERE id_atencion = ?";
+            try (java.sql.PreparedStatement psSelect = con.prepareStatement(sqlSelect)) {
+                psSelect.setInt(1, idAtencionTest);
+                try (java.sql.ResultSet rsSelect = psSelect.executeQuery()) {
+                    assertTrue(rsSelect.next(), "El registro debe seguir existiendo en la base de datos (Baja lógica).");
+                    String estadoActual = rsSelect.getString("estado");
+                    org.junit.jupiter.api.Assertions.assertEquals("ANULADO", estadoActual, "El estado del registro debe haber cambiado a 'ANULADO'.");
+                }
+            }
+
+            // 5. Limpieza física: Eliminar el registro de prueba de la base de datos para no ensuciar
+            String sqlDeleteFisico = "DELETE FROM g2_vet_atenciones WHERE id_atencion = ?";
+            try (java.sql.PreparedStatement psDelete = con.prepareStatement(sqlDeleteFisico)) {
+                psDelete.setInt(1, idAtencionTest);
+                psDelete.executeUpdate();
+            }
+
+        } catch (Exception e) {
+            org.junit.jupiter.api.Assertions.fail("Excepción durante la prueba de soft delete: " + e.getMessage());
+        }
+    }
 }

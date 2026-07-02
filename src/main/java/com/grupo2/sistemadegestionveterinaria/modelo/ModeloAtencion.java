@@ -47,6 +47,11 @@ public class ModeloAtencion {
     private String nombreMedico;
 
     /**
+     * Estado del registro (ej. ACTIVO, ANULADO).
+     */
+    private String estado;
+
+    /**
      * Constructor por defecto de la clase ModeloAtencion. Crea una instancia
      * vacía sin inicializar sus atributos.
      */
@@ -177,5 +182,23 @@ public class ModeloAtencion {
      */
     public final void setNombreMedico(final String nuevoNombreMedico) {
         this.nombreMedico = nuevoNombreMedico;
+    }
+
+    /**
+     * Obtiene el estado del registro de atención.
+     *
+     * @return El estado del registro.
+     */
+    public final String getEstado() {
+        return estado;
+    }
+
+    /**
+     * Establece el estado del registro de atención.
+     *
+     * @param nuevoEstado El nuevo estado.
+     */
+    public final void setEstado(final String nuevoEstado) {
+        this.estado = nuevoEstado;
     }
 }

@@ -29,7 +29,7 @@ public class FacturaDAO {
    * @throws Exception si ocurre algún error durante la conexión o inserción.
    */
   public boolean registrarFacturaCompleta(Factura factura, List<DetalleFactura> detalles) throws Exception {
-    String sqlFactura = "INSERT INTO g2_vet_factura (nombre_cliente, cedula_cliente, subtotal, iva, total) VALUES (?, ?, ?, ?, ?)";
+    String sqlFactura = "INSERT INTO g2_vet_factura (nombre_cliente, cedula_cliente, subtotal, iva, total, creado) VALUES (?, ?, ?, ?, ?, NOW())";
     String sqlDetalle = "INSERT INTO g2_vet_detalle_factura (id_factura, concepto, precio_unitario, cantidad, precio_final) VALUES (?, ?, ?, ?, ?)";
 
     try (Connection con = CnnDB.getConeccion()) {
@@ -98,7 +98,7 @@ public class FacturaDAO {
    */
   public List<Factura> obtenerTodasLasFacturas() throws Exception {
     List<Factura> lista = new ArrayList<>();
-    String sql = "SELECT * FROM g2_vet_factura ORDER BY id_factura DESC";
+    String sql = "SELECT * FROM g2_vet_factura WHERE eliminado IS NULL ORDER BY id_factura DESC";
     try (Connection con = CnnDB.getConeccion();
          PreparedStatement ps = con.prepareStatement(sql);
          ResultSet rs = ps.executeQuery()) {
@@ -127,7 +127,7 @@ public class FacturaDAO {
    * @throws Exception si ocurre algún error durante la eliminación.
    */
   public boolean eliminarFactura(int idFactura) throws Exception {
-    String sql = "DELETE FROM g2_vet_factura WHERE id_factura = ?";
+    String sql = "UPDATE g2_vet_factura SET eliminado = NOW() WHERE id_factura = ?";
     try (Connection con = CnnDB.getConeccion();
          PreparedStatement ps = con.prepareStatement(sql)) {
       ps.setInt(1, idFactura);
@@ -148,7 +148,7 @@ public class FacturaDAO {
    * @throws Exception si ocurre algún error durante la actualización.
    */
   public boolean actualizarFactura(int idFactura, String nuevoNombre, String nuevaCedula) throws Exception {
-    String sql = "UPDATE g2_vet_factura SET nombre_cliente = ?, cedula_cliente = ? WHERE id_factura = ?";
+    String sql = "UPDATE g2_vet_factura SET nombre_cliente = ?, cedula_cliente = ?, actualizado = NOW() WHERE id_factura = ?";
     try (Connection con = CnnDB.getConeccion();
          PreparedStatement ps = con.prepareStatement(sql)) {
       ps.setString(1, nuevoNombre);

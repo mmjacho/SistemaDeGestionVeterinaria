@@ -165,8 +165,8 @@ public class ModeloMedico {
      */
     public boolean guardarMedico() {
         String sql = "INSERT INTO g2_vet_medicos "
-        + "(nombres, apellidos, especialidad, telefono, estado) "
-        + "VALUES (?, ?, ?, ?, ?)";
+        + "(nombres, apellidos, especialidad, telefono, estado, creado) "
+        + "VALUES (?, ?, ?, ?, ?, NOW())";
 
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -197,7 +197,7 @@ public class ModeloMedico {
      */
     public ArrayList<ModeloMedico> listarMedicos() {
         ArrayList<ModeloMedico> lista = new ArrayList<>();
-        String sql = "SELECT * FROM g2_vet_medicos WHERE estado = true ORDER BY apellidos";
+        String sql = "SELECT * FROM g2_vet_medicos WHERE estado = true AND eliminado IS NULL ORDER BY apellidos";
 
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -236,7 +236,8 @@ public class ModeloMedico {
                 + "apellidos=?, "
                 + "especialidad=?, "
                 + "telefono=?, "
-                + "estado=? "
+                + "estado=?, "
+                + "actualizado=NOW() "
                 + "WHERE id_medico=?";
 
         try (Connection con = CnnDB.getConeccion();
@@ -268,7 +269,7 @@ public class ModeloMedico {
      * @return true si se desactivó correctamente; false de lo contrario.
      */
     public boolean eliminarMedico() {
-        String sql = "UPDATE g2_vet_medicos SET estado=false WHERE id_medico=?";
+        String sql = "UPDATE g2_vet_medicos SET estado=false, eliminado=NOW() WHERE id_medico=?";
 
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -296,8 +297,8 @@ public class ModeloMedico {
     public ArrayList<ModeloMedico> buscarMedico(String textoBuscar) {
         ArrayList<ModeloMedico> lista = new ArrayList<>();
         String sql = "SELECT * FROM g2_vet_medicos "
-                + "WHERE nombres LIKE ? "
-                + "OR apellidos LIKE ?";
+                + "WHERE (nombres LIKE ? "
+                + "OR apellidos LIKE ?) AND eliminado IS NULL";
 
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql)) {

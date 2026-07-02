@@ -24,7 +24,7 @@ public class CitaDAO {
      * @return true si la cita se guardó exitosamente; false de lo contrario.
      */
     public boolean guardarCita(ModeloCita cita) {
-        String sql = "INSERT INTO g2_vet_citas (medico_id, mascota_id, fecha, hora, estado) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO g2_vet_citas (medico_id, mascota_id, fecha, hora, estado, creado) VALUES (?, ?, ?, ?, ?, NOW())";
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, cita.getMedicoId());
@@ -47,7 +47,7 @@ public class CitaDAO {
      */
     public ArrayList<ModeloCita> listarCitas() {
         ArrayList<ModeloCita> lista = new ArrayList<>();
-        String sql = "SELECT * FROM g2_vet_citas";
+        String sql = "SELECT * FROM g2_vet_citas WHERE eliminado IS NULL";
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -74,7 +74,7 @@ public class CitaDAO {
      * @return true si se actualizó con éxito; false en caso contrario.
      */
     public boolean actualizarCita(ModeloCita cita) {
-        String sql = "UPDATE g2_vet_citas SET medico_id=?, mascota_id=?, fecha=?, hora=?, estado=? WHERE id_cita=?";
+        String sql = "UPDATE g2_vet_citas SET medico_id=?, mascota_id=?, fecha=?, hora=?, estado=?, actualizado=NOW() WHERE id_cita=?";
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, cita.getMedicoId());
@@ -98,7 +98,7 @@ public class CitaDAO {
      * @return true si se canceló exitosamente; false en caso contrario.
      */
     public boolean eliminarCita(Integer id) {
-        String sql = "UPDATE g2_vet_citas SET estado='CANCELADA' WHERE id_cita=?";
+        String sql = "UPDATE g2_vet_citas SET estado='CANCELADA', eliminado=NOW() WHERE id_cita=?";
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -118,7 +118,7 @@ public class CitaDAO {
      */
     public ArrayList<ModeloCita> listarCitasPorFecha(String fecha) {
         ArrayList<ModeloCita> lista = new ArrayList<>();
-        String sql = "SELECT * FROM g2_vet_citas WHERE fecha = ?";
+        String sql = "SELECT * FROM g2_vet_citas WHERE fecha = ? AND eliminado IS NULL";
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, fecha);
@@ -148,7 +148,7 @@ public class CitaDAO {
      */
     public ArrayList<ModeloCita> obtenerCitasPorMedico(int medicoId) {
         ArrayList<ModeloCita> lista = new ArrayList<>();
-        String sql = "SELECT * FROM g2_vet_citas WHERE medico_id = ?";
+        String sql = "SELECT * FROM g2_vet_citas WHERE medico_id = ? AND eliminado IS NULL";
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, medicoId);
@@ -177,7 +177,7 @@ public class CitaDAO {
      * @return la cantidad total de citas en el estado especificado.
      */
     public int contarCitasPorEstado(String estado) {
-        String sql = "SELECT COUNT(*) FROM g2_vet_citas WHERE estado = ?";
+        String sql = "SELECT COUNT(*) FROM g2_vet_citas WHERE estado = ? AND eliminado IS NULL";
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, estado);
@@ -200,7 +200,7 @@ public class CitaDAO {
      * @return true si el médico está disponible; false en caso contrario.
      */
     public boolean verificarDisponibilidadMedico(int medicoId, String fecha, String hora, Integer idCita) {
-        String sql = "SELECT COUNT(*) FROM g2_vet_citas WHERE medico_id=? AND fecha=? AND hora=? AND estado!='CANCELADA'";
+        String sql = "SELECT COUNT(*) FROM g2_vet_citas WHERE medico_id=? AND fecha=? AND hora=? AND estado!='CANCELADA' AND eliminado IS NULL";
         if (idCita != null) sql += " AND id_cita != " + idCita;
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -226,7 +226,7 @@ public class CitaDAO {
      * @return true si la mascota está disponible; false en caso contrario.
      */
     public boolean verificarDisponibilidadMascota(int mascotaId, String fecha, String hora, Integer idCita) {
-        String sql = "SELECT COUNT(*) FROM g2_vet_citas WHERE mascota_id=? AND fecha=? AND hora=? AND estado!='CANCELADA'";
+        String sql = "SELECT COUNT(*) FROM g2_vet_citas WHERE mascota_id=? AND fecha=? AND hora=? AND estado!='CANCELADA' AND eliminado IS NULL";
         if (idCita != null) sql += " AND id_cita != " + idCita;
         try (Connection con = CnnDB.getConeccion();
              PreparedStatement ps = con.prepareStatement(sql)) {

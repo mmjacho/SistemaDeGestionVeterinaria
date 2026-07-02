@@ -33,7 +33,7 @@ public class DbDAOMod1 {
      */
     public ModeloCliente buscarCliente(String cedula) throws Exception {
 
-        String sql = "SELECT * FROM g2_vet_clientes WHERE cedula=?";
+        String sql = "SELECT * FROM g2_vet_clientes WHERE cedula=? AND eliminado IS NULL";
 
         try (Connection con = CnnDB.getConeccion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -69,7 +69,7 @@ public class DbDAOMod1 {
 
         List<ModeloMascota> lista = new ArrayList<>();
 
-        String sql = "SELECT * FROM g2_vet_mascotas WHERE id_cliente=? and estado=0";
+        String sql = "SELECT * FROM g2_vet_mascotas WHERE id_cliente=? and estado=0 AND eliminado IS NULL";
 
         try (Connection con = CnnDB.getConeccion(); PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -107,7 +107,7 @@ public class DbDAOMod1 {
      */
     public int insertarCliente(ModeloCliente c, Connection con) throws Exception {
 
-        String sql = "INSERT INTO g2_vet_clientes (cedula,nombres,telefono) VALUES (?,?,?)";
+        String sql = "INSERT INTO g2_vet_clientes (cedula,nombres,telefono,creado) VALUES (?,?,?,NOW())";
 
         try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -139,7 +139,7 @@ public class DbDAOMod1 {
      */
     public void actualizarCliente(ModeloCliente c, Connection con) throws Exception {
 
-        String sql = "UPDATE g2_vet_clientes SET nombres=?, telefono=? WHERE id_cliente=?";
+        String sql = "UPDATE g2_vet_clientes SET nombres=?, telefono=?, actualizado=NOW() WHERE id_cliente=?";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -159,7 +159,7 @@ public class DbDAOMod1 {
      */
     public List<ModeloCliente> listarClientes() throws Exception {
         List<ModeloCliente> lista = new ArrayList<>();
-        String sql = "SELECT * FROM g2_vet_clientes";
+        String sql = "SELECT * FROM g2_vet_clientes WHERE eliminado IS NULL";
         try (Connection con = CnnDB.getConeccion(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 ModeloCliente c = new ModeloCliente();
@@ -182,7 +182,8 @@ public class DbDAOMod1 {
         List<String[]> reporte = new ArrayList<>();
         String sql = "SELECT c.cedula, c.nombres, m.nombre as mascota, m.especie "
                 + "FROM g2_vet_clientes c "
-                + "LEFT JOIN g2_vet_mascotas m ON c.id_cliente = m.id_cliente "
+                + "LEFT JOIN g2_vet_mascotas m ON c.id_cliente = m.id_cliente AND m.eliminado IS NULL "
+                + "WHERE c.eliminado IS NULL "
                 + "ORDER BY c.nombres";
 
         try (Connection con = CnnDB.getConeccion(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -211,8 +212,8 @@ public class DbDAOMod1 {
      */
     public void guardarMascotas(List<ModeloMascota> lista, int clienteId, Connection con) throws Exception {
 
-        String sqlInsert = "INSERT INTO g2_vet_mascotas (nombre,raza,especie,id_cliente) VALUES (?,?,?,?)";
-        String sqlUpdate = "UPDATE g2_vet_mascotas SET nombre=?, raza=?, especie=? WHERE id_mascota=?";
+        String sqlInsert = "INSERT INTO g2_vet_mascotas (nombre,raza,especie,id_cliente,creado) VALUES (?,?,?,?,NOW())";
+        String sqlUpdate = "UPDATE g2_vet_mascotas SET nombre=?, raza=?, especie=?, actualizado=NOW() WHERE id_mascota=?";
 
         for (ModeloMascota m : lista) {
 
@@ -255,7 +256,7 @@ public class DbDAOMod1 {
      */
     public void eliminarMascota(int id, Connection con) throws Exception {
 
-        String sql = "UPDATE g2_vet_mascotas SET estado = 9 WHERE id_mascota=?";
+        String sql = "UPDATE g2_vet_mascotas SET estado = 9, eliminado=NOW() WHERE id_mascota=?";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -277,7 +278,7 @@ public class DbDAOMod1 {
 
         List<ModeloMascota> lista = new ArrayList<>();
 
-        String sql = "SELECT * FROM g2_vet_mascotas WHERE nombre LIKE ?";
+        String sql = "SELECT * FROM g2_vet_mascotas WHERE nombre LIKE ? AND eliminado IS NULL";
 
         try (Connection con = CnnDB.getConeccion(); PreparedStatement ps = con.prepareStatement(sql)) {
 

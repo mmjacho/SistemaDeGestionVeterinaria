@@ -61,7 +61,7 @@ public class AtencionDAO {
      */
     public final boolean registrarAtencion(final ModeloAtencion pAtencion) {
         String sql = "INSERT INTO g2_vet_atenciones (id_cita, temperatura, "
-                + "peso_actual, diagnostico, receta) VALUES (?, ?, ?, ?, ?)";
+                + "peso_actual, diagnostico, receta, creado) VALUES (?, ?, ?, ?, ?, NOW())";
 
         try (Connection con = CnnDB.getConeccion();
                 PreparedStatement ps = con.prepareStatement(sql)) {
@@ -162,7 +162,7 @@ public class AtencionDAO {
                 + "FROM g2_vet_atenciones a "
                 + "JOIN g2_vet_citas c ON a.id_cita = c.id_cita "
                 + "JOIN g2_vet_medicos m ON c.medico_id = m.id_medico "
-                + "WHERE c.mascota_id = ?";
+                + "WHERE c.mascota_id = ? AND a.eliminado IS NULL";
 
         try (Connection con = CnnDB.getConeccion();
                 PreparedStatement ps = con.prepareStatement(sql)) {
@@ -178,6 +178,7 @@ public class AtencionDAO {
                     atencion.setDiagnostico(rs.getString("diagnostico"));
                     atencion.setReceta(rs.getString("receta"));
                     atencion.setNombreMedico(rs.getString("medico"));
+                    atencion.setEstado(rs.getString("estado"));
                     historial.add(atencion);
                 }
             }
@@ -202,7 +203,7 @@ public class AtencionDAO {
     public final boolean actualizarDiagnostico(final int pIdAtencion,
             final String pDiagnostico, final String pReceta) {
         String sql = "UPDATE g2_vet_atenciones SET diagnostico = ?, "
-                + "receta = ? WHERE id_atencion = ?";
+                + "receta = ?, actualizado = NOW() WHERE id_atencion = ?";
 
         try (Connection con = CnnDB.getConeccion();
                 PreparedStatement ps = con.prepareStatement(sql)) {
@@ -224,13 +225,14 @@ public class AtencionDAO {
     }
 
     /**
-     * Ejecuta una baja física (DELETE) sobre una ficha de atención médica.
+     * Ejecuta una baja lógica (UPDATE a ANULADO) sobre una ficha de atención médica
+     * para mantener la auditoría del historial clínico.
      *
      * @param pIdAtencion Identificador único de la atención a remover.
-     * @return true si se eliminó de forma efectiva, false en caso contrario.
+     * @return true si se anuló de forma efectiva, false en caso contrario.
      */
     public final boolean eliminarAtencion(final int pIdAtencion) {
-        String sql = "DELETE FROM g2_vet_atenciones WHERE id_atencion = ?";
+        String sql = "UPDATE g2_vet_atenciones SET estado = 'ANULADO', eliminado = NOW() WHERE id_atencion = ?";
 
         try (Connection con = CnnDB.getConeccion();
                 PreparedStatement ps = con.prepareStatement(sql)) {
@@ -240,7 +242,7 @@ public class AtencionDAO {
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            System.err.println("Error SQL al eliminar el registro: "
+            System.err.println("Error SQL al anular el registro: "
                     + e.getMessage());
             return false;
         } catch (Exception e) {
