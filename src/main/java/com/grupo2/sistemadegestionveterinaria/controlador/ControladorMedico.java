@@ -547,6 +547,12 @@ if (!vista.txtNombres.getText().trim().isEmpty()) {
 
 }
 
+if (textoBuscar.isEmpty()) {
+
+    listarMedicos();
+    return;
+}
+
     //-------------------------------------
     // COLUMNAS TABLA
     //-------------------------------------
