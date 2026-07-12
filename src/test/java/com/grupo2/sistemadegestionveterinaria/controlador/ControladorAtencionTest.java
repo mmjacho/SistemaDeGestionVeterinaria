@@ -192,9 +192,6 @@ public class ControladorAtencionTest {
         }
     }
 
-    // =================================================================
-    // TESTING DE POO: CLASE APLANADA (MÉTODO EN BASE A TU CONTEXTO)
-    // =================================================================
     /**
      * Test de la Clase Aplanada del grupo.
      *
