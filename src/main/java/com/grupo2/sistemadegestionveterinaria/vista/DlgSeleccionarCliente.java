@@ -15,7 +15,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class DlgSeleccionarCliente extends javax.swing.JDialog {
 
+    /** Cliente seleccionado en el diálogo. */
     private ModeloCliente clienteSeleccionado = null;
+    /** DAO para interactuar con la base de datos. */
     private final DbDAOMod1 dao = new DbDAOMod1();
 
     /**
@@ -193,8 +195,11 @@ public class DlgSeleccionarCliente extends javax.swing.JDialog {
     }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  /** Botón para confirmar la selección. */
   private javax.swing.JButton btnok;
+  /** Panel de desplazamiento para la tabla de clientes. */
   private javax.swing.JScrollPane jScrollPane1;
+  /** Tabla que muestra los clientes. */
   private javax.swing.JTable tblClientes;
   // End of variables declaration//GEN-END:variables
 }

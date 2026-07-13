@@ -22,6 +22,12 @@ import java.util.List;
  */
 public class ControladorClienteMascota {
 
+    /**
+     * Constructor por defecto de ControladorClienteMascota.
+     */
+    public ControladorClienteMascota() {
+    }
+
     private final DbDAOMod1 dao = new DbDAOMod1();
 
     // =========================

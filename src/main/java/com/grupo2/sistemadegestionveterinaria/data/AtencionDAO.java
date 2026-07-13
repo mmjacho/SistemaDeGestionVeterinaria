@@ -21,6 +21,12 @@ import java.util.Map;
  */
 public class AtencionDAO {
 
+    /**
+     * Constructor por defecto de AtencionDAO.
+     */
+    public AtencionDAO() {
+    }
+
     // CONSTANTES PARA ELIMINAR NÚMEROS MÁGICOS
 
     /** Índice de parámetro para el campo ID Cita. */

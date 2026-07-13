@@ -18,6 +18,12 @@ import java.util.ArrayList;
 public class CitaDAO {
 
     /**
+     * Constructor por defecto de CitaDAO.
+     */
+    public CitaDAO() {
+    }
+
+    /**
      * Registra una nueva cita médica en la base de datos.
      *
      * @param cita el objeto ModeloCita con la información de la cita.

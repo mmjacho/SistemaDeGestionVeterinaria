@@ -17,6 +17,12 @@ import java.sql.SQLException;
  */
 public class CnnDB {
 
+  /**
+   * Constructor por defecto de CnnDB.
+   */
+  public CnnDB() {
+  }
+
   // 1. Parámetros del servidor:
   private static final String HOST = "www.ecuinfo.net";
   private static final String PUERTO = "3306";

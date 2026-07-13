@@ -24,9 +24,13 @@ import java.util.List;
  */
 public class FrmMascota extends javax.swing.JFrame {
 
+    /** Cliente actual gestionado en el formulario. */
     private ModeloCliente clienteActual = null;
+    /** Modelo de datos para la tabla de mascotas. */
     private DefaultTableModel modelo;
+    /** DAO para el acceso a datos. */
     private final com.grupo2.sistemadegestionveterinaria.data.DbDAOMod1 dao = new com.grupo2.sistemadegestionveterinaria.data.DbDAOMod1();
+    /** Bandera indicando si hay una búsqueda en proceso. */
     private boolean buscando = false;
 
     /**
@@ -573,28 +577,51 @@ public class FrmMascota extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    /** Botón para agregar mascota. */
     private javax.swing.JButton btnAgregar;
+    /** Botón para buscar clientes. */
     private javax.swing.JButton btnBuscar;
+    /** Botón para eliminar mascota. */
     private javax.swing.JButton btnEliminar;
+    /** Botón para guardar cliente y mascotas. */
     private javax.swing.JButton btnGuardar;
+    /** Botón para generar reportes. */
     private javax.swing.JButton btnrepo;
+    /** Selector de especie de mascota. */
     private javax.swing.JComboBox<String> cbEspecie;
+    /** Etiqueta jLabel1. */
     private javax.swing.JLabel jLabel1;
+    /** Etiqueta jLabel2. */
     private javax.swing.JLabel jLabel2;
+    /** Etiqueta jLabel3. */
     private javax.swing.JLabel jLabel3;
+    /** ScrollPane para la tabla. */
     private javax.swing.JScrollPane jScrollPane1;
+    /** Etiqueta de estado del cliente. */
     private javax.swing.JLabel lbEstado;
+    /** Etiqueta de la cédula del cliente. */
     private javax.swing.JLabel lbced;
+    /** Etiqueta del nombre del cliente. */
     private javax.swing.JLabel lbnom;
+    /** Etiqueta del teléfono del cliente. */
     private javax.swing.JLabel lbtel;
+    /** Panel de datos del cliente. */
     private javax.swing.JPanel pnCli;
+    /** Panel de datos de la mascota. */
     private javax.swing.JPanel pnMasc;
+    /** ScrollPane principal del formulario. */
     private javax.swing.JScrollPane scroll;
+    /** Tabla de mascotas. */
     private javax.swing.JTable tabla;
+    /** Campo de texto para la cédula. */
     private javax.swing.JTextField txtCedula;
+    /** Campo de texto para el nombre de la mascota. */
     private javax.swing.JTextField txtMascota;
+    /** Campo de texto para el nombre del cliente. */
     private javax.swing.JTextField txtNombre;
+    /** Campo de texto para la raza de la mascota. */
     private javax.swing.JTextField txtRaza;
+    /** Campo de texto para el teléfono del cliente. */
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }

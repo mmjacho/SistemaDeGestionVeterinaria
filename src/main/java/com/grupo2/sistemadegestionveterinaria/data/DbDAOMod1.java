@@ -21,6 +21,12 @@ import java.util.List;
  */
 public class DbDAOMod1 {
 
+    /**
+     * Constructor por defecto de DbDAOMod1.
+     */
+    public DbDAOMod1() {
+    }
+
     // =========================
     // 🔍 BUSCAR CLIENTE
     // =========================

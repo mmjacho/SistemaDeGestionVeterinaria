@@ -13,6 +13,12 @@ package com.grupo2.sistemadegestionveterinaria.modelo;
  */
 public class ModeloCliente {
 
+  /**
+   * Constructor por defecto de ModeloCliente.
+   */
+  public ModeloCliente() {
+  }
+
   private Integer id;
   private String cedula;
   private String nombres;

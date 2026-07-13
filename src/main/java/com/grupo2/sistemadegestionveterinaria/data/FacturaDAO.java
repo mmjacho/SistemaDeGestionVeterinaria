@@ -21,6 +21,12 @@ import com.grupo2.sistemadegestionveterinaria.modelo.DetalleFactura;
 public class FacturaDAO {
 
   /**
+   * Constructor por defecto de FacturaDAO.
+   */
+  public FacturaDAO() {
+  }
+
+  /**
    * Registra una factura completa y sus detalles de manera transaccional.
    *
    * @param factura la cabecera de la factura con los totales.

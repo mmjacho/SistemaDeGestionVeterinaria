@@ -21,6 +21,12 @@ import com.grupo2.sistemadegestionveterinaria.data.CnnDB;
  */
 public class ModeloMascota {
 
+  /**
+   * Constructor por defecto de ModeloMascota.
+   */
+  public ModeloMascota() {
+  }
+
   private Integer id;
   private String nombre;
   private String raza;
