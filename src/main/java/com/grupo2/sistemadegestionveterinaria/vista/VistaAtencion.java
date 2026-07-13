@@ -523,19 +523,36 @@ public class VistaAtencion extends JFrame {
         private final int id;
         private final String texto;
 
+        /**
+         * Constructor de ComboItem.
+         * @param id el identificador único del ítem.
+         * @param texto el texto descriptivo del ítem.
+         */
         public ComboItem(int id, String texto) {
             this.id = id;
             this.texto = texto;
         }
 
+        /**
+         * Obtiene el identificador único del ítem.
+         * @return el identificador del ítem.
+         */
         public int getId() {
             return id;
         }
 
+        /**
+         * Obtiene el texto descriptivo del ítem.
+         * @return el texto del ítem.
+         */
         public String getTexto() {
             return texto;
         }
 
+        /**
+         * Devuelve la representación en cadena de texto del ítem.
+         * @return el texto descriptivo.
+         */
         @Override
         public String toString() {
             return texto;

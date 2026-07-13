@@ -18,6 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class ModeloMedicoTest {
 
+    /**
+     * Prueba que se puedan listar los médicos y que la lista no sea nula ni vacía.
+     */
    @Test
     public void testListarMedicos() {
 
@@ -48,6 +51,9 @@ public class ModeloMedicoTest {
 
     assertTrue(resultado);
 }*/
+    /**
+     * Prueba la eliminación de un médico del sistema por su ID.
+     */
    @Test
    public void testEliminarMedico() {
 
@@ -60,6 +66,9 @@ public class ModeloMedicoTest {
 
     assertTrue(resultado);
 } 
+    /**
+     * Prueba la búsqueda de médicos por nombre.
+     */
    @Test
     public void testBuscarMedico() {
 
@@ -78,6 +87,9 @@ public class ModeloMedicoTest {
 }
     //PRUEBAS CON CASOS DE FALLO
     
+    /**
+     * Caso de fallo: Prueba que un número de teléfono con más de 10 dígitos exceda el límite permitido.
+     */
     @Test
     public void testTelefonoExcedeLimite() {
 
@@ -88,6 +100,9 @@ public class ModeloMedicoTest {
     );
     }
     
+    /**
+     * Caso de fallo: Prueba que el número de teléfono contenga letras y no sea puramente numérico.
+     */
     @Test
     public void testTelefonoConLetras() {
 
@@ -99,6 +114,9 @@ public class ModeloMedicoTest {
     assertFalse(soloNumeros);
     }
     
+    /**
+     * Caso de fallo: Prueba que el nombre contenga números y no sea solo letras.
+     */
     @Test
     public void testNombresConNumeros() {
 
@@ -110,6 +128,9 @@ public class ModeloMedicoTest {
     assertFalse(soloLetras);
     }
     
+    /**
+     * Caso de fallo: Prueba que el apellido contenga números y no sea solo letras.
+     */
     @Test
     public void testApellidosConNumeros() {
 

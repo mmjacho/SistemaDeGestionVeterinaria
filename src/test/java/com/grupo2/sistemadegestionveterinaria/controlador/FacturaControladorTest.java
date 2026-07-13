@@ -9,12 +9,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Pruebas unitarias para el controlador de facturación.
+ * Valida la lógica de negocio y cálculos en VentanaFacturacion.
+ */
 public class FacturaControladorTest {
 
   private VentanaFacturacion vista;
   private FacturaDAO dao;
   private FacturaControlador controlador;
 
+  /**
+   * Configuración inicial para las pruebas del controlador de facturación.
+   * Inicializa la vista, el DAO y el controlador.
+   */
   @BeforeEach
   public void setUp() {
     // Inicializamos los componentes antes de cada prueba de forma aislada
@@ -23,6 +31,10 @@ public class FacturaControladorTest {
     controlador = new FacturaControlador(vista, dao);
   }
 
+  /**
+   * Prueba el recalculo de totales de facturación con datos válidos.
+   * Verifica que el subtotal, el IVA (15%) y el total se calculen correctamente.
+   */
   @Test
   public void testRecalcularTotales_CasoValido() {
     System.out.println("--- Ejecutando Test: Caso Válido ---");
@@ -57,6 +69,10 @@ public class FacturaControladorTest {
     System.out.println(">> ¡Éxito! Subtotal (40.00), IVA (6.00) y Total (46.00) calculados perfectamente.");
   }
 
+  /**
+   * Prueba el comportamiento del sistema cuando se ingresa un precio negativo.
+   * Valida que se detecte el error y se bloquee el flujo.
+   */
   @Test
   public void testRecalcularTotales_ForzarFallo_PrecioNegativo() {
     System.out.println("--- Ejecutando Test: Forzar Fallo (Precio Negativo) ---");

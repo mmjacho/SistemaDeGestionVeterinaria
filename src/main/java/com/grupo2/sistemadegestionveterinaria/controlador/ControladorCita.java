@@ -33,7 +33,7 @@ public class ControladorCita {
      * registra los eventos de interacción y carga los listados iniciales de
      * médicos, mascotas y citas.
      *
-     * @param vista la ventana VistaCita que despliega los controles de la cita.
+     * @param v la ventana VistaCita que despliega los controles de la cita.
      */
     public ControladorCita(final VistaCita v) {
         this.vista = v; // Ya no hay conflicto de nombres

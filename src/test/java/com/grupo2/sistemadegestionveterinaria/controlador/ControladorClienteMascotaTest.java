@@ -13,12 +13,20 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Pruebas unitarias para la clase ControladorClienteMascota.
+ * Verifica la lógica de validación de clientes y mascotas.
+ */
 public class ControladorClienteMascotaTest {
 
   private ControladorClienteMascota controlador;
   private ModeloCliente clienteValido;
   private List<ModeloMascota> listaMascotasValida;
 
+  /**
+   * Configuración previa a cada método de prueba.
+   * Inicializa el controlador y los objetos de prueba válidos.
+   */
   @BeforeEach
   public void setUp() {
     controlador = new ControladorClienteMascota();
@@ -42,6 +50,9 @@ public class ControladorClienteMascotaTest {
   // ==========================================
   // PRUEBAS PARA: validarCliente (Análisis Estático)
   // ==========================================
+  /**
+   * Prueba que valida un cliente con datos correctos.
+   */
   @Test
   public void testValidarCliente_Correcto() {
     // Ejecución de flujo sin lanzar excepciones de negocio
@@ -52,6 +63,9 @@ public class ControladorClienteMascotaTest {
     });
   }
 
+  /**
+   * Prueba la validación de un cliente con una cédula inválida.
+   */
   @Test
   public void testValidarCliente_ErrorCedula() {
     clienteValido.setCedula("095623-ABC"); // Cédula inválida
@@ -66,6 +80,9 @@ public class ControladorClienteMascotaTest {
   // ==========================================
   // PRUEBAS PARA: guardar / Validación Mascotas
   // ==========================================
+  /**
+   * Prueba que se lance una excepción si se intenta guardar un cliente sin mascotas.
+   */
   @Test
   public void testGuardar_ErrorListaMascotasVacia() {
     List<ModeloMascota> listaVacia = new ArrayList<>();
@@ -77,6 +94,9 @@ public class ControladorClienteMascotaTest {
     assertEquals("Debe ingresar al menos una mascota", exception.getMessage());
   }
 
+  /**
+   * Prueba que se lance una excepción si se intenta guardar una mascota con nombre inválido.
+   */
   @Test
   public void testGuardar_ErrorNombreMascotaInvalido() {
     listaMascotasValida.get(0).setNombre(""); // Nombre vacío viola regla de negocio

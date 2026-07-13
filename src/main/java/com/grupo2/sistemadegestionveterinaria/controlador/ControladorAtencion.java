@@ -2,6 +2,7 @@ package com.grupo2.sistemadegestionveterinaria.controlador;
 
 import com.grupo2.sistemadegestionveterinaria.data.AtencionDAO;
 import com.grupo2.sistemadegestionveterinaria.modelo.ModeloAtencion;
+import com.grupo2.sistemadegestionveterinaria.modelo.ModeloUsuario;
 import com.grupo2.sistemadegestionveterinaria.vista.VistaAtencion;
 import com.grupo2.sistemadegestionveterinaria.vista.VistaMenuPrincipal;
 import javax.swing.JOptionPane;
@@ -139,7 +140,8 @@ public class ControladorAtencion {
     private String nombreMedicoActual = "--";
 
     /**
-     * Bandera para evitar disparos recursivos/no deseados al recargar el JComboBox.
+     * Bandera para evitar disparos recursivos/no deseados al recargar
+     * el JComboBox.
      */
     private boolean isCargandoCitas = false;
 
@@ -178,21 +180,28 @@ public class ControladorAtencion {
     private void configurarListeners() {
         this.vista.getCbxIdCita().addActionListener(e -> {
             if (isCargandoCitas) return;
-            Object selectedItem = this.vista.getCbxIdCita().getSelectedItem();
-            if (selectedItem != null && !selectedItem.toString().equals("Seleccione...")) {
+            Object selectedItem = this.vista.getCbxIdCita()
+                    .getSelectedItem();
+            boolean haySeleccion = selectedItem != null
+                    && !selectedItem.toString().equals("Seleccione...");
+            if (haySeleccion) {
                 int idCita = Integer.parseInt(selectedItem.toString());
                 this.vista.getTxtIdCita().setText(selectedItem.toString());
 
                 // Obtener datos de mascota y cliente
-                Map<String, Integer> ids = dao.obtenerMascotaYClientePorCita(idCita);
+                Map<String, Integer> ids = dao
+                        .obtenerMascotaYClientePorCita(idCita);
                 if (!ids.isEmpty()) {
                     int idCliente = ids.get("cliente_id");
                     int idMascota = ids.get("mascota_id");
 
                     // Seleccionar dueño en cbxDueno
                     isCargandoCitas = true;
-                    for (int i = 0; i < this.vista.getCbxDueno().getItemCount(); i++) {
-                        VistaAtencion.ComboItem item = this.vista.getCbxDueno().getItemAt(i);
+                    int totalDuenos = this.vista.getCbxDueno()
+                            .getItemCount();
+                    for (int i = 0; i < totalDuenos; i++) {
+                        VistaAtencion.ComboItem item = this.vista
+                                .getCbxDueno().getItemAt(i);
                         if (item.getId() == idCliente) {
                             this.vista.getCbxDueno().setSelectedIndex(i);
                             break;
@@ -201,22 +210,27 @@ public class ControladorAtencion {
 
                     // Cargar mascotas para este dueño
                     this.vista.getCbxMascota().removeAllItems();
-                    this.vista.getCbxMascota().addItem(new VistaAtencion.ComboItem(0, "Seleccione..."));
-                    List<Map<String, String>> mascotas = dao.obtenerMascotasPorCliente(idCliente);
+                    this.vista.getCbxMascota().addItem(
+                            new VistaAtencion.ComboItem(0, "Seleccione..."));
+                    List<Map<String, String>> mascotas = dao
+                            .obtenerMascotasPorCliente(idCliente);
                     int mascotIndexToSelect = 0;
                     for (Map<String, String> m : mascotas) {
                         int id = Integer.parseInt(m.get("id"));
                         String nombre = m.get("nombre");
-                        VistaAtencion.ComboItem mascotItem = new VistaAtencion.ComboItem(id, nombre);
+                        VistaAtencion.ComboItem mascotItem =
+                                new VistaAtencion.ComboItem(id, nombre);
                         this.vista.getCbxMascota().addItem(mascotItem);
                         if (id == idMascota) {
-                            mascotIndexToSelect = this.vista.getCbxMascota().getItemCount() - 1;
+                            mascotIndexToSelect = this.vista.getCbxMascota()
+                                    .getItemCount() - 1;
                         }
                     }
 
                     // Seleccionar mascota
                     if (mascotIndexToSelect > 0) {
-                        this.vista.getCbxMascota().setSelectedIndex(mascotIndexToSelect);
+                        this.vista.getCbxMascota()
+                                .setSelectedIndex(mascotIndexToSelect);
                     }
                     isCargandoCitas = false;
                 }
@@ -236,17 +250,21 @@ public class ControladorAtencion {
         this.vista.getCbxDueno().addActionListener(e -> {
             if (isCargandoCitas) return;
 
-            VistaAtencion.ComboItem duenoSel = (VistaAtencion.ComboItem) this.vista.getCbxDueno().getSelectedItem();
+            VistaAtencion.ComboItem duenoSel = (VistaAtencion.ComboItem)
+                    this.vista.getCbxDueno().getSelectedItem();
             isCargandoCitas = true;
             this.vista.getCbxMascota().removeAllItems();
-            this.vista.getCbxMascota().addItem(new VistaAtencion.ComboItem(0, "Seleccione..."));
+            this.vista.getCbxMascota().addItem(
+                    new VistaAtencion.ComboItem(0, "Seleccione..."));
 
             if (duenoSel != null && duenoSel.getId() > 0) {
-                List<Map<String, String>> mascotas = dao.obtenerMascotasPorCliente(duenoSel.getId());
+                List<Map<String, String>> mascotas = dao
+                        .obtenerMascotasPorCliente(duenoSel.getId());
                 for (Map<String, String> m : mascotas) {
                     int id = Integer.parseInt(m.get("id"));
                     String nombre = m.get("nombre");
-                    this.vista.getCbxMascota().addItem(new VistaAtencion.ComboItem(id, nombre));
+                    this.vista.getCbxMascota().addItem(
+                            new VistaAtencion.ComboItem(id, nombre));
                 }
             }
             isCargandoCitas = false;
@@ -262,9 +280,11 @@ public class ControladorAtencion {
         this.vista.getCbxMascota().addActionListener(e -> {
             if (isCargandoCitas) return;
 
-            VistaAtencion.ComboItem mascotSel = (VistaAtencion.ComboItem) this.vista.getCbxMascota().getSelectedItem();
+            VistaAtencion.ComboItem mascotSel = (VistaAtencion.ComboItem)
+                    this.vista.getCbxMascota().getSelectedItem();
             if (mascotSel != null && mascotSel.getId() > 0) {
-                int idCita = dao.obtenerCitaActivaPorMascota(mascotSel.getId());
+                int idCita = dao
+                        .obtenerCitaActivaPorMascota(mascotSel.getId());
                 if (idCita != -1) {
                     this.vista.getTxtIdCita().setText(String.valueOf(idCita));
                 } else {
@@ -313,8 +333,8 @@ public class ControladorAtencion {
     }
 
     /**
-     * Procesa la lectura, validación e inserción de una nueva ficha clínica de
-     * atención médica.
+     * Procesa la lectura, validación e inserción de una nueva ficha
+     * clínica de atención médica.
      */
     private void ejecutarRegistro() {
         try {
@@ -323,7 +343,9 @@ public class ControladorAtencion {
                     || vista.getTxtPeso().getText().trim().isEmpty()) {
                 if (vista.getTxtIdCita().getText().trim().isEmpty()) {
                     JOptionPane.showMessageDialog(vista,
-                            "La mascota seleccionada no posee una cita activa (PROGRAMADA o REPROGRAMADA) en la agenda.",
+                            "La mascota seleccionada no posee una cita "
+                            + "activa (PROGRAMADA o REPROGRAMADA) en "
+                            + "la agenda.",
                             "Error de Cita", JOptionPane.ERROR_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(vista,
@@ -381,7 +403,8 @@ public class ControladorAtencion {
             if (dao.registrarAtencion(modelo)) {
                 dao.actualizarEstadoCita(idCita, "ATENDIDA");
                 JOptionPane.showMessageDialog(vista,
-                        "Ficha de atención clínica almacenada correctamente.");
+                        "Ficha de atención clínica almacenada "
+                        + "correctamente.");
                 vista.getTxtIdCita().setText("");
                 cargarCitasActivas();
                 ejecutarBusquedaHistorial();
@@ -405,15 +428,18 @@ public class ControladorAtencion {
      */
     private void ejecutarBusquedaHistorial() {
         try {
-            VistaAtencion.ComboItem mascotSel = (VistaAtencion.ComboItem) vista.getCbxMascota().getSelectedItem();
+            VistaAtencion.ComboItem mascotSel = (VistaAtencion.ComboItem)
+                    vista.getCbxMascota().getSelectedItem();
             int idMascota = -1;
 
             if (mascotSel != null && mascotSel.getId() > 0) {
                 idMascota = mascotSel.getId();
                 nombreMascotaActual = mascotSel.getTexto();
 
-                VistaAtencion.ComboItem duenoSel = (VistaAtencion.ComboItem) vista.getCbxDueno().getSelectedItem();
-                nombreDuenoActual = duenoSel != null ? duenoSel.getTexto() : "--";
+                VistaAtencion.ComboItem duenoSel = (VistaAtencion.ComboItem)
+                        vista.getCbxDueno().getSelectedItem();
+                nombreDuenoActual = duenoSel != null
+                        ? duenoSel.getTexto() : "--";
             } else {
                 // Modo compatibilidad / fallback para pruebas unitarias
                 if (vista.getTxtIdCita().getText().trim().isEmpty()) {
@@ -421,7 +447,8 @@ public class ControladorAtencion {
                             "Seleccione una mascota para cargar el historial.");
                     return;
                 }
-                int idCita = Integer.parseInt(vista.getTxtIdCita().getText().trim());
+                int idCita = Integer.parseInt(
+                        vista.getTxtIdCita().getText().trim());
                 idMascota = dao.obtenerIdMascotaPorCita(idCita);
                 Map<String, String> datosCita = dao.obtenerDatosCita(idCita);
                 if (!datosCita.isEmpty()) {
@@ -451,11 +478,15 @@ public class ControladorAtencion {
                 nombreMedicoActual = "--";
             }
 
-            vista.getLblNombreMascota().setText("Mascota: " + nombreMascotaActual);
-            vista.getLblNombreDueno().setText("Dueño: " + nombreDuenoActual);
-            vista.getLblNombreMedico().setText("Médico: " + nombreMedicoActual);
+            vista.getLblNombreMascota().setText(
+                    "Mascota: " + nombreMascotaActual);
+            vista.getLblNombreDueno().setText(
+                    "Dueño: " + nombreDuenoActual);
+            vista.getLblNombreMedico().setText(
+                    "Médico: " + nombreMedicoActual);
 
-            List<ModeloAtencion> historial = dao.obtenerHistorialPorMascota(idMascota);
+            List<ModeloAtencion> historial = dao
+                    .obtenerHistorialPorMascota(idMascota);
             DefaultTableModel modeloTabla = vista.getModeloTablaDef();
             modeloTabla.setRowCount(0);
 
@@ -515,8 +546,8 @@ public class ControladorAtencion {
     }
 
     /**
-     * Remueve de forma lógica o física una ficha de atención médica previa tras
-     * la confirmación explícita del operador.
+     * Remueve de forma lógica o física una ficha de atención médica
+     * previa tras la confirmación explícita del operador.
      */
     private void ejecutarEliminacion() {
         int filaSeleccionada = vista.getTablaHistorial().getSelectedRow();
@@ -568,8 +599,9 @@ public class ControladorAtencion {
     }
 
     /**
-     * Procesa la construcción y maquetación de la vista previa del reporte
-     * clínico formateado en HTML para su impresión física o exportación a PDF.
+     * Procesa la construcción y maquetación de la vista previa del
+     * reporte clínico formateado en HTML para su impresión física o
+     * exportación a PDF.
      */
     private void ejecutarReporte() {
         if (vista.getTablaHistorial().getRowCount() == 0) {
@@ -579,7 +611,6 @@ public class ControladorAtencion {
             return;
         }
 
-        String idCitaTxt = vista.getTxtIdCita().getText().trim();
         StringBuilder html = new StringBuilder();
 
         html.append("<html><body style='font-family:Arial; margin:20px;'>");
@@ -591,8 +622,10 @@ public class ControladorAtencion {
 
         html.append("<table style='width:100%; font-size:13px;' ")
                 .append("cellpadding='4'>");
-        html.append("<tr><td><b>Paciente (Mascota):</b> ").append(nombreMascotaActual)
-                .append("</td><td><b>Propietario (Dueño):</b> ").append(nombreDuenoActual)
+        html.append("<tr><td><b>Paciente (Mascota):</b> ")
+                .append(nombreMascotaActual)
+                .append("</td><td><b>Propietario (Dueño):</b> ")
+                .append(nombreDuenoActual)
                 .append("</td></tr></table><br>");
 
         html.append("<table border='1' cellspacing='0' cellpadding='6' ")
@@ -613,9 +646,9 @@ public class ControladorAtencion {
                     .getValueAt(i, COL_IDX_TEMP).toString();
             String valPeso = vista.getTablaHistorial()
                     .getValueAt(i, COL_IDX_PESO).toString();
-            String valMed = vista.getTablaHistorial()
-                    .getValueAt(i, COL_IDX_MED) != null ? vista.getTablaHistorial()
-                    .getValueAt(i, COL_IDX_MED).toString() : "--";
+            Object medico = vista.getTablaHistorial()
+                    .getValueAt(i, COL_IDX_MED);
+            String valMed = medico != null ? medico.toString() : "--";
 
             html.append("<tr><td>").append(valId)
                     .append("</td><td>").append(valDiag)
@@ -627,8 +660,10 @@ public class ControladorAtencion {
         }
 
         html.append("</table><br><br><br><br>");
+        String usuarioLogueado = ModeloUsuario.getUsuarioLogueado();
         html.append("<p style='text-align:right; font-size:12px;'><b>")
-                .append(com.grupo2.sistemadegestionveterinaria.modelo.ModeloUsuario.getUsuarioLogueado()).append("</b><br>")
+                .append(usuarioLogueado)
+                .append("</b><br>")
                 .append("Firma Autorizada</p></body></html>");
 
         JDialog ventanaReporte = new JDialog(vista,
@@ -710,30 +745,34 @@ public class ControladorAtencion {
     }
 
     /**
-     * Carga los dueños (clientes) desde la base de datos hacia el selector de la interfaz.
+     * Carga los dueños (clientes) desde la base de datos hacia el
+     * selector de la interfaz.
      */
     private void cargarDuenos() {
         isCargandoCitas = true;
         List<Map<String, String>> clientes = dao.obtenerClientes();
         vista.getCbxDueno().removeAllItems();
-        vista.getCbxDueno().addItem(new VistaAtencion.ComboItem(0, "Seleccione..."));
+        vista.getCbxDueno().addItem(
+                new VistaAtencion.ComboItem(0, "Seleccione..."));
         for (Map<String, String> c : clientes) {
             int id = Integer.parseInt(c.get("id"));
             String nombre = c.get("nombre");
-            vista.getCbxDueno().addItem(new VistaAtencion.ComboItem(id, nombre));
+            vista.getCbxDueno().addItem(
+                    new VistaAtencion.ComboItem(id, nombre));
         }
         isCargandoCitas = false;
 
         // Limpiar el selector de mascotas
         isCargandoCitas = true;
         vista.getCbxMascota().removeAllItems();
-        vista.getCbxMascota().addItem(new VistaAtencion.ComboItem(0, "Seleccione..."));
+        vista.getCbxMascota().addItem(
+                new VistaAtencion.ComboItem(0, "Seleccione..."));
         isCargandoCitas = false;
     }
 
     /**
-     * Carga las citas activas (PROGRAMADA y REPROGRAMADA) desde la base de datos
-     * hacia el selector de la interfaz visual.
+     * Carga las citas activas (PROGRAMADA y REPROGRAMADA) desde la
+     * base de datos hacia el selector de la interfaz visual.
      */
     private void cargarCitasActivas() {
         isCargandoCitas = true;
